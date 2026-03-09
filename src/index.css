@@ -114,7 +114,7 @@ body {
 .mobile-menu-btn {
     display: none;
     font-size: 1.8rem;
-    color: var(--white);
+    color: inherit;
     cursor: pointer;
     z-index: 1001;
     transition: var(--transition);
@@ -974,6 +974,7 @@ body {
         display: inline-block;
         font-size: 1.2rem;
         padding: 10px 20px;
+        color: var(--white) !important;
     }
 
     .social-nav {
@@ -984,6 +985,7 @@ body {
     .social-nav a {
         font-size: 1.5rem;
         padding: 5px;
+        color: var(--white) !important;
     }
 
     .nav-links .admin-trigger {
