@@ -11,6 +11,7 @@ function App() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [scrolled, setScrolled] = useState(false);
     const [showPrivacy, setShowPrivacy] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Backend integration states
     const [properties, setProperties] = useState([]);
@@ -118,11 +119,14 @@ function App() {
                     <div className="logo-container">
                         <img src="/images/logo.png" alt="Viva Home Inmuebles" className="navbar-logo" />
                     </div>
-                    <ul className="nav-links">
-                        <li><a href="#proyectos">Venta</a></li>
-                        <li><a href="#proyectos">Renta</a></li>
-                        <li><a href="#nosotros">Nosotros</a></li>
-                        <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="contact-btn">Contacto</a></li>
+                    <div className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                        <i className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+                    </div>
+                    <ul className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
+                        <li><a href="#proyectos" onClick={() => setIsMobileMenuOpen(false)}>Venta</a></li>
+                        <li><a href="#proyectos" onClick={() => setIsMobileMenuOpen(false)}>Renta</a></li>
+                        <li><a href="#nosotros" onClick={() => setIsMobileMenuOpen(false)}>Nosotros</a></li>
+                        <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="contact-btn" onClick={() => setIsMobileMenuOpen(false)}>Contacto</a></li>
                         <div className="social-nav">
                             <a href="https://www.instagram.com/vivahomeqro/" target="_blank" rel="noopener noreferrer">
                                 <i className="fab fa-instagram"></i>
@@ -132,7 +136,7 @@ function App() {
                             </a>
                         </div>
                         {/* Admin Link */}
-                        <a href="#" className="admin-trigger" onClick={(e) => { e.preventDefault(); setShowAdminLogin(true); }}>
+                        <a href="#" className="admin-trigger" onClick={(e) => { e.preventDefault(); setShowAdminLogin(true); setIsMobileMenuOpen(false); }}>
                             <i className="fas fa-user-shield"></i>
                         </a>
                     </ul>
