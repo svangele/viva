@@ -33,10 +33,10 @@ function App() {
         try {
             const res = await fetch(`${API_URL}/properties`);
             const data = await res.json();
-            setProperties(data.map((filename, index) => ({
-                id: index,
-                image: `/propiedades/${filename}`,
-                filename: filename
+            setProperties(data.map((item, index) => ({
+                id: item.id || index,
+                image: item.image || `/propiedades/${item}`,
+                filename: item.filename || item
             })));
         } catch (err) {
             console.error('Error fetching properties:', err);
@@ -74,7 +74,7 @@ function App() {
 
         setUploading(true);
         try {
-            const res = await fetch(`${API_URL}/upload`, {
+            const res = await fetch(`${API_URL}/properties`, {
                 method: 'POST',
                 body: formData
             });
