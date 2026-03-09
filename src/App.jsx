@@ -20,7 +20,7 @@ function App() {
     const [uploading, setUploading] = useState(false);
     const [loginError, setLoginError] = useState('');
 
-    const API_URL = 'http://localhost:3001/api';
+    const API_URL = '/api';
 
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
