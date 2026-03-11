@@ -1129,6 +1129,8 @@ body {
     grid-column: 1 / -1;
 }
 
+.form-group input,
+.form-group select,
 .form-group textarea {
     width: 100%;
     padding: 12px 15px;
@@ -1136,8 +1138,19 @@ body {
     border-radius: 8px;
     outline: none;
     font-family: inherit;
+    transition: var(--transition);
+}
+
+.form-group textarea {
     min-height: 100px;
     resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184, 150, 87, 0.1);
 }
 
 .submit-btn {

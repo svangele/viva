@@ -1,3 +1,4 @@
+compatibility_date = "2024-03-01"
 name = "viva-home-inmuebles"
 pages_build_output_dir = "./dist"
 

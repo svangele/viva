@@ -24,14 +24,21 @@ function App() {
         try {
             const res = await fetch(`${API_URL}/properties`);
             const data = await res.json();
-            setProperties(data.map((item, index) => ({
-                id: item.id || index,
-                image: item.images?.[0] || item.image || `/propiedades/${item.filename || item}`,
-                filename: item.filename || item,
-                ...item
-            })));
+            
+            if (Array.isArray(data)) {
+                setProperties(data.map((item, index) => ({
+                    id: item.id || index,
+                    image: item.images?.[0] || item.image || `/propiedades/${item.filename || item}`,
+                    filename: item.filename || item,
+                    ...item
+                })));
+            } else {
+                console.error('API did not return an array:', data);
+                setProperties([]);
+            }
         } catch (err) {
             console.error('Error fetching properties:', err);
+            setProperties([]);
         }
     };
 
