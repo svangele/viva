@@ -1,0 +1,11 @@
+name = "viva-home-inmuebles"
+pages_build_output_dir = "./dist"
+
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "viva-properties"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "viva-db"
+database_id = "cb05de9b-6c61-4688-88af-e534033096fb" # Run 'npx wrangler d1 create viva-db' to get this

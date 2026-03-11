@@ -1,29 +1,16 @@
 export async function onRequestGet(context) {
     const { env } = context;
     try {
-        // Try to get the properties.json database file
-        const dbFile = await env.R2_BUCKET.get('properties.json');
-        
-        if (dbFile) {
-            const properties = await dbFile.json();
-            return Response.json(properties);
-        }
+        const { results } = await env.DB.prepare(
+            "SELECT * FROM properties ORDER BY uploadedAt DESC"
+        ).all();
 
-        // Fallback: list all objects if no database file exists
-        const listed = await env.R2_BUCKET.list();
-        const properties = listed.objects
-            .filter(obj => obj.key !== 'properties.json')
-            .map(obj => ({
-                id: obj.key,
-                filename: obj.key,
-                image: `/api/properties/${obj.key}`,
-                uploadedAt: obj.uploaded
-            }));
-
-        // Sort by uploaded date, newest first
-        properties.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-
-        return Response.json(properties);
+        return Response.json(results.map(row => ({
+            ...row,
+            coordinates: row.coordinates ? JSON.parse(row.coordinates) : null,
+            images: row.images ? JSON.parse(row.images) : [],
+            image: row.images ? JSON.parse(row.images)[0] : null
+        })));
     } catch (e) {
         return new Response(JSON.stringify({ error: e.message }), {
             status: 500,
@@ -38,39 +25,45 @@ export async function onRequestPost(context) {
         const contentType = request.headers.get('Content-Type') || '';
 
         if (contentType.includes('application/json')) {
-            // Save/Update property metadata
             const property = await request.json();
-            
-            // Get existing properties
-            let properties = [];
-            const dbFile = await env.R2_BUCKET.get('properties.json');
-            if (dbFile) {
-                properties = await dbFile.json();
-            }
+            const id = property.id || Date.now().toString();
+            const uploadedAt = property.uploadedAt || new Date().toISOString();
 
-            if (property.id) {
-                // Update existing
-                const index = properties.findIndex(p => p.id === property.id);
-                if (index !== -1) {
-                    properties[index] = { ...properties[index], ...property };
-                } else {
-                    properties.push(property);
-                }
-            } else {
-                // New property
-                property.id = Date.now().toString();
-                property.uploadedAt = new Date().toISOString();
-                properties.push(property);
-            }
+            await env.DB.prepare(`
+                INSERT INTO properties (
+                    id, title, price, type, location, m2_lote, m2_construccion, 
+                    bathrooms, parking, bedrooms, floors, level, description, 
+                    coordinates, images, uploadedAt
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(id) DO UPDATE SET
+                    title=excluded.title, price=excluded.price, type=excluded.type,
+                    location=excluded.location, m2_lote=excluded.m2_lote,
+                    m2_construccion=excluded.m2_construccion, bathrooms=excluded.bathrooms,
+                    parking=excluded.parking, bedrooms=excluded.bedrooms,
+                    floors=excluded.floors, level=excluded.level,
+                    description=excluded.description, coordinates=excluded.coordinates,
+                    images=excluded.images
+            `).bind(
+                id,
+                property.title,
+                property.price,
+                property.type,
+                property.location,
+                property.m2_lote,
+                property.m2_construccion,
+                property.bathrooms,
+                property.parking,
+                property.bedrooms,
+                property.floors,
+                property.level,
+                property.description,
+                JSON.stringify(property.coordinates),
+                JSON.stringify(property.images),
+                uploadedAt
+            ).run();
 
-            // Save back to R2
-            await env.R2_BUCKET.put('properties.json', JSON.stringify(properties), {
-                httpMetadata: { contentType: 'application/json' }
-            });
-
-            return Response.json({ success: true, property });
+            return Response.json({ success: true, property: { ...property, id, uploadedAt } });
         } else {
-            // Handle Image Upload (existing logic)
             const formData = await request.formData();
             const file = formData.get('image');
 
@@ -104,35 +97,25 @@ export async function onRequestPost(context) {
 
 export async function onRequestDelete(context) {
     const { env, params } = context;
-    const filename = params.filename; // You'll need to update the file structure to support this param if not already
+    const id = params.filename;
 
     try {
-        // If deleting the whole property from the JSON
-        const dbFile = await env.R2_BUCKET.get('properties.json');
-        if (dbFile) {
-            let properties = await dbFile.json();
-            // Check if it's a property ID or a filename
-            const propertyIndex = properties.findIndex(p => p.id === filename);
-            
-            if (propertyIndex !== -1) {
-                const property = properties[propertyIndex];
-                // Optional: delete associated images from R2
-                if (property.images) {
-                    for (const imgUrl of property.images) {
-                        const imgName = imgUrl.split('/').pop();
-                        await env.R2_BUCKET.delete(imgName);
-                    }
+        const property = await env.DB.prepare("SELECT images FROM properties WHERE id = ?").bind(id).first();
+        
+        if (property) {
+            if (property.images) {
+                const images = JSON.parse(property.images);
+                for (const imgUrl of images) {
+                    const imgName = imgUrl.split('/').pop();
+                    await env.R2_BUCKET.delete(imgName);
                 }
-                properties.splice(propertyIndex, 1);
-                await env.R2_BUCKET.put('properties.json', JSON.stringify(properties), {
-                    httpMetadata: { contentType: 'application/json' }
-                });
-                return Response.json({ success: true });
             }
+            await env.DB.prepare("DELETE FROM properties WHERE id = ?").bind(id).run();
+            return Response.json({ success: true });
         }
 
-        // Fallback: delete the specific file
-        await env.R2_BUCKET.delete(filename);
+        // Fallback for direct image deletion if param is filename
+        await env.R2_BUCKET.delete(id);
         return Response.json({ success: true });
     } catch (e) {
         return new Response(JSON.stringify({ error: e.message }), {
