@@ -113,7 +113,7 @@ export async function onRequestPut(context) {
             UPDATE properties SET
                 title=?, price=?, type=?, status=?, location=?, m2_lote=?, m2_construccion=?, 
                 bathrooms=?, parking=?, bedrooms=?, floors=?, level=?, description=?, 
-                coordinates=?
+                coordinates=?, images=?
             WHERE id = ?
         `).bind(
             property.title,
@@ -130,6 +130,7 @@ export async function onRequestPut(context) {
             property.level,
             property.description,
             JSON.stringify(property.coordinates),
+            JSON.stringify(property.images || []),
             id
         ).run();
 
