@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// ../.wrangler/tmp/bundle-tYZxr2/checked-fetch.js
+// ../.wrangler/tmp/bundle-oBwPOY/checked-fetch.js
 var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
@@ -126,12 +126,12 @@ async function onRequestPost2(context) {
       const uploadedAt = property.uploadedAt || (/* @__PURE__ */ new Date()).toISOString();
       await env.DB.prepare(`
                 INSERT INTO properties (
-                    id, title, price, type, location, m2_lote, m2_construccion, 
+                    id, title, price, type, status, location, m2_lote, m2_construccion, 
                     bathrooms, parking, bedrooms, floors, level, description, 
                     coordinates, images, uploadedAt
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
-                    title=excluded.title, price=excluded.price, type=excluded.type,
+                    title=excluded.title, price=excluded.price, type=excluded.type, status=excluded.status,
                     location=excluded.location, m2_lote=excluded.m2_lote,
                     m2_construccion=excluded.m2_construccion, bathrooms=excluded.bathrooms,
                     parking=excluded.parking, bedrooms=excluded.bedrooms,
@@ -143,6 +143,7 @@ async function onRequestPost2(context) {
         property.title,
         property.price,
         property.type,
+        property.status || "Disponible",
         property.location,
         property.m2_lote,
         property.m2_construccion,
@@ -198,14 +199,15 @@ async function onRequestPut(context) {
     }
     await env.DB.prepare(`
             UPDATE properties SET
-                title=?, price=?, type=?, location=?, m2_lote=?, m2_construccion=?, 
+                title=?, price=?, type=?, status=?, location=?, m2_lote=?, m2_construccion=?, 
                 bathrooms=?, parking=?, bedrooms=?, floors=?, level=?, description=?, 
-                coordinates=?
+                coordinates=?, images=?
             WHERE id = ?
         `).bind(
       property.title,
       property.price,
       property.type,
+      property.status || "Disponible",
       property.location,
       property.m2_lote,
       property.m2_construccion,
@@ -216,6 +218,7 @@ async function onRequestPut(context) {
       property.level,
       property.description,
       JSON.stringify(property.coordinates),
+      JSON.stringify(property.images || []),
       id
     ).run();
     return Response.json({ success: true, property });
@@ -761,7 +764,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-tYZxr2/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-oBwPOY/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -793,7 +796,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-tYZxr2/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-oBwPOY/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
