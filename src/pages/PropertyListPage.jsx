@@ -249,7 +249,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                 <div className="property-grid">
                     {filteredProperties.length > 0 ? (
                         filteredProperties.map((prop) => (
-                            <div key={prop.id} className="property-card">
+                            <div key={prop.id} className="property-card gallery-item">
                                 <div className="property-image" onClick={() => setSelectedProperty(prop)} style={{ cursor: 'pointer' }}>
                                     <img src={prop.images?.[0] || prop.image} alt={prop.title || "Propiedad"} />
                                     {isAdmin && (
