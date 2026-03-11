@@ -96,9 +96,14 @@ function App() {
             });
             if (res.ok) {
                 fetchProperties();
+                alert('Propiedad eliminada con éxito');
+            } else {
+                const data = await res.json();
+                alert('Error al eliminar: ' + (data.error || res.statusText));
             }
         } catch (err) {
             console.error('Delete error:', err);
+            alert('Error de red al intentar eliminar');
         }
     };
 
