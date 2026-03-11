@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// ../.wrangler/tmp/bundle-KRRJyx/checked-fetch.js
+// ../.wrangler/tmp/bundle-Y3faQC/checked-fetch.js
 var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
@@ -173,6 +173,48 @@ async function onRequestPost2(context) {
   }
 }
 __name(onRequestPost2, "onRequestPost");
+async function onRequestPut(context) {
+  const { request, env } = context;
+  try {
+    const property = await request.json();
+    const id = property.id;
+    if (!id) {
+      return new Response(JSON.stringify({ error: "Property ID is required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+    await env.DB.prepare(`
+            UPDATE properties SET
+                title=?, price=?, type=?, location=?, m2_lote=?, m2_construccion=?, 
+                bathrooms=?, parking=?, bedrooms=?, floors=?, level=?, description=?, 
+                coordinates=?
+            WHERE id = ?
+        `).bind(
+      property.title,
+      property.price,
+      property.type,
+      property.location,
+      property.m2_lote,
+      property.m2_construccion,
+      property.bathrooms,
+      property.parking,
+      property.bedrooms,
+      property.floors,
+      property.level,
+      property.description,
+      JSON.stringify(property.coordinates),
+      id
+    ).run();
+    return Response.json({ success: true, property });
+  } catch (e) {
+    return new Response(JSON.stringify({ error: e.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+}
+__name(onRequestPut, "onRequestPut");
 async function onRequestDelete2(context) {
   const { env, params } = context;
   const id = params.filename;
@@ -243,6 +285,13 @@ var routes = [
     method: "POST",
     middlewares: [],
     modules: [onRequestPost2]
+  },
+  {
+    routePath: "/api/properties",
+    mountPath: "/api/properties",
+    method: "PUT",
+    middlewares: [],
+    modules: [onRequestPut]
   }
 ];
 
@@ -733,7 +782,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-KRRJyx/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-Y3faQC/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -765,7 +814,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-KRRJyx/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-Y3faQC/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

@@ -142,7 +142,13 @@ function App() {
                     />
                     <Route 
                         path="/propiedad/:id" 
-                        element={<PropertyDetailPage properties={properties} />} 
+                        element={
+                            <PropertyDetailPage 
+                                properties={properties} 
+                                isAdmin={isAdmin} 
+                                fetchProperties={fetchProperties} 
+                            />
+                        } 
                     />
                 </Routes>
 

@@ -95,6 +95,52 @@ export async function onRequestPost(context) {
     }
 }
 
+export async function onRequestPut(context) {
+    const { request, env } = context;
+    try {
+        const property = await request.json();
+        const id = property.id;
+
+        if (!id) {
+            return new Response(JSON.stringify({ error: 'Property ID is required' }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        await env.DB.prepare(`
+            UPDATE properties SET
+                title=?, price=?, type=?, location=?, m2_lote=?, m2_construccion=?, 
+                bathrooms=?, parking=?, bedrooms=?, floors=?, level=?, description=?, 
+                coordinates=?
+            WHERE id = ?
+        `).bind(
+            property.title,
+            property.price,
+            property.type,
+            property.location,
+            property.m2_lote,
+            property.m2_construccion,
+            property.bathrooms,
+            property.parking,
+            property.bedrooms,
+            property.floors,
+            property.level,
+            property.description,
+            JSON.stringify(property.coordinates),
+            id
+        ).run();
+
+        return Response.json({ success: true, property });
+    } catch (e) {
+        return new Response(JSON.stringify({ error: e.message }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+}
+
+
 export async function onRequestDelete(context) {
     const { env, params } = context;
     const id = params.filename;

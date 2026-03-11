@@ -3,21 +3,43 @@ import { useParams, Link } from 'react-router-dom';
 
 const API_URL = '/api';
 
-function PropertyDetailPage({ properties }) {
+function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
     const { id } = useParams();
     const [property, setProperty] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editForm, setEditForm] = useState(null);
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
-        // Try to find in passed properties first
         const found = properties.find(p => String(p.id) === id);
         if (found) {
             setProperty(found);
-        } else {
-            // Fallback: fetch single property if needed (uncomment if API supports it)
-            // fetch(`${API_URL}/properties/${id}`).then(res => res.json()).then(data => setProperty(data));
+            setEditForm(found);
         }
         window.scrollTo(0, 0);
     }, [id, properties]);
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            const res = await fetch(`${API_URL}/properties/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(editForm)
+            });
+            if (res.ok) {
+                await fetchProperties();
+                setIsEditing(false);
+            } else {
+                alert('Error al guardar los cambios');
+            }
+        } catch (err) {
+            console.error('Save error:', err);
+            alert('Error de conexión');
+        } finally {
+            setSaving(false);
+        }
+    };
 
     if (!property) {
         return (
@@ -30,32 +52,83 @@ function PropertyDetailPage({ properties }) {
         );
     }
 
-    const { title, price, location, description, images, coordinates, ...chars } = property;
-    const mapUrl = coordinates?.lat && coordinates?.lng 
-        ? `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}&output=embed` 
+    const mapUrl = property.coordinates?.lat && property.coordinates?.lng 
+        ? `https://www.google.com/maps?q=${property.coordinates.lat},${property.coordinates.lng}&output=embed` 
         : null;
 
     return (
         <div className="detail-page">
             <div className="detail-container">
                 <div className="detail-header">
-                    <Link to="/propiedades" style={{ color: 'var(--gold)', textDecoration: 'none', display: 'inline-block', marginBottom: '20px' }}>
-                        <i className="fas fa-arrow-left"></i> Volver al listado
-                    </Link>
-                    <h1 className="detail-title">{title || "Propiedad en Querétaro"}</h1>
-                    <div className="detail-price">${price?.toLocaleString() || "Consultar"}</div>
-                    <p style={{ color: '#666', marginTop: '10px' }}>
-                        <i className="fas fa-map-marker-alt"></i> {location}
-                    </p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div>
+                            <Link to="/propiedades" style={{ color: 'var(--gold)', textDecoration: 'none', display: 'inline-block', marginBottom: '20px' }}>
+                                <i className="fas fa-arrow-left"></i> Volver al listado
+                            </Link>
+                            {!isEditing ? (
+                                <>
+                                    <h1 className="detail-title">{property.title || "Propiedad en Querétaro"}</h1>
+                                    <div className="detail-price">${property.price?.toLocaleString() || "Consultar"}</div>
+                                </>
+                            ) : (
+                                <div style={{ marginBottom: '20px' }}>
+                                    <input 
+                                        className="edit-input" 
+                                        value={editForm.title} 
+                                        onChange={e => setEditForm({...editForm, title: e.target.value})}
+                                        placeholder="Título de la propiedad"
+                                        style={{ fontSize: '2rem', fontWeight: 'bold' }}
+                                    />
+                                    <input 
+                                        className="edit-input" 
+                                        type="number"
+                                        value={editForm.price} 
+                                        onChange={e => setEditForm({...editForm, price: parseFloat(e.target.value)})}
+                                        placeholder="Precio"
+                                    />
+                                </div>
+                            )}
+                            <p style={{ color: '#666', marginTop: '10px' }}>
+                                <i className="fas fa-map-marker-alt"></i> 
+                                {isEditing ? (
+                                    <input 
+                                        className="edit-input" 
+                                        value={editForm.location} 
+                                        onChange={e => setEditForm({...editForm, location: e.target.value})}
+                                        placeholder="Ubicación"
+                                    />
+                                ) : property.location}
+                            </p>
+                        </div>
+
+                        {isAdmin && (
+                            <div className="edit-actions">
+                                {!isEditing ? (
+                                    <button className="edit-btn" onClick={() => setIsEditing(true)}>
+                                        <i className="fas fa-edit"></i> Modificar Propiedad
+                                    </button>
+                                ) : (
+                                    <>
+                                        <button className="save-btn" onClick={handleSave} disabled={saving}>
+                                            {saving ? 'Guardando...' : 'Guardar Cambios'}
+                                        </button>
+                                        <button className="cancel-btn" onClick={() => { setIsEditing(false); setEditForm(property); }}>
+                                            Cancelar
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <div className="detail-gallery">
-                    {images?.length > 0 ? (
-                        images.map((img, i) => (
-                            <img key={i} src={img} alt={`${title} ${i}`} />
+                    {property.images?.length > 0 ? (
+                        property.images.map((img, i) => (
+                            <img key={i} src={img} alt={`${property.title} ${i}`} />
                         ))
                     ) : (
-                        <img src={property.image} alt={title} />
+                        <img src={property.image} alt={property.title} />
                     )}
                 </div>
 
@@ -63,22 +136,40 @@ function PropertyDetailPage({ properties }) {
                     <div className="detail-left">
                         <div className="detail-content">
                             <h3>Sobre esta propiedad</h3>
-                            <p style={{ whiteSpace: 'pre-line', marginTop: '20px', lineHeight: '1.8', color: '#444' }}>
-                                {description || "Sin descripción disponible."}
-                            </p>
+                            {!isEditing ? (
+                                <p style={{ whiteSpace: 'pre-line', marginTop: '20px', lineHeight: '1.8', color: '#444' }}>
+                                    {property.description || "Sin descripción disponible."}
+                                </p>
+                            ) : (
+                                <textarea 
+                                    className="edit-textarea" 
+                                    rows="8"
+                                    value={editForm.description} 
+                                    onChange={e => setEditForm({...editForm, description: e.target.value})}
+                                    placeholder="Descripción de la propiedad"
+                                    style={{ marginTop: '20px' }}
+                                />
+                            )}
 
                             <div className="detail-features-grid">
-                                {chars.m2_lote && <div className="feature-item"><strong>M² Terreno</strong><span>{chars.m2_lote}</span></div>}
-                                {chars.m2_construccion && <div className="feature-item"><strong>M² Const</strong><span>{chars.m2_construccion}</span></div>}
-                                {chars.bedrooms && <div className="feature-item"><strong>Recámaras</strong><span>{chars.bedrooms}</span></div>}
-                                {chars.bathrooms && <div className="feature-item"><strong>Baños</strong><span>{chars.bathrooms}</span></div>}
-                                {chars.parking && <div className="feature-item"><strong>Cochera</strong><span>{chars.parking}</span></div>}
-                                {chars.floors && <div className="feature-item"><strong>Pisos</strong><span>{chars.floors}</span></div>}
-                                {chars.level && <div className="feature-item"><strong>Nivel</strong><span>{chars.level}</span></div>}
+                                {['m2_lote', 'm2_construccion', 'bedrooms', 'bathrooms', 'parking', 'floors', 'level'].map(key => (
+                                    <div className="feature-item" key={key}>
+                                        <strong>{key.replace('_', ' ')}</strong>
+                                        {isEditing ? (
+                                            <input 
+                                                className="edit-input" 
+                                                value={editForm[key] || ''} 
+                                                onChange={e => setEditForm({...editForm, [key]: e.target.value})}
+                                            />
+                                        ) : (
+                                            <span>{property[key]}</span>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
-                        {mapUrl && (
+                        {!isEditing && mapUrl && (
                             <div className="detail-content" style={{ marginTop: '30px' }}>
                                 <h3>Ubicación</h3>
                                 <div style={{ marginTop: '20px' }}>
@@ -93,6 +184,32 @@ function PropertyDetailPage({ properties }) {
                                 </div>
                             </div>
                         )}
+                        
+                        {isEditing && (
+                            <div className="detail-content" style={{ marginTop: '30px' }}>
+                                <h3>Coordenadas GPS (Google Maps)</h3>
+                                <div className="edit-form-grid" style={{ marginTop: '20px' }}>
+                                    <input 
+                                        className="edit-input" 
+                                        placeholder="Latitud"
+                                        value={editForm.coordinates?.lat || ''} 
+                                        onChange={e => setEditForm({
+                                            ...editForm, 
+                                            coordinates: { ...editForm.coordinates, lat: e.target.value }
+                                        })}
+                                    />
+                                    <input 
+                                        className="edit-input" 
+                                        placeholder="Longitud"
+                                        value={editForm.coordinates?.lng || ''} 
+                                        onChange={e => setEditForm({
+                                            ...editForm, 
+                                            coordinates: { ...editForm.coordinates, lng: e.target.value }
+                                        })}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="detail-sidebar">
@@ -100,7 +217,7 @@ function PropertyDetailPage({ properties }) {
                             <h4 style={{ marginBottom: '20px' }}>¿Te interesa esta propiedad?</h4>
                             <p style={{ marginBottom: '25px', color: '#666', fontSize: '0.9rem' }}>Agenda una cita o solicita más información por WhatsApp.</p>
                             <a 
-                                href={`https://wa.me/524421080739?text=Hola, me interesa la propiedad: ${title || 'Sin Título'}`} 
+                                href={`https://wa.me/524421080739?text=Hola, me interesa la propiedad: ${property.title || 'Sin Título'}`} 
                                 target="_blank" 
                                 rel="noopener noreferrer" 
                                 className="cta-button secondary"
