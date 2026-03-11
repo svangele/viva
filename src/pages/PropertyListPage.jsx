@@ -17,6 +17,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
         title: '',
         price: '',
         type: 'Venta',
+        status: 'Disponible',
         location: '',
         m2_lote: '',
         m2_construccion: '',
@@ -131,7 +132,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
             if (res.ok) {
                 alert('Propiedad guardada con éxito');
                 setNewProperty({
-                    title: '', price: '', type: 'Venta', location: '', m2_lote: '', m2_construccion: '',
+                    title: '', price: '', type: 'Venta', status: 'Disponible', location: '', m2_lote: '', m2_construccion: '',
                     bathrooms: '', parking: '', bedrooms: '', floors: '', level: '', description: '',
                     coordinates: { lat: '', lng: '' }, images: []
                 });
@@ -252,6 +253,11 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                             <div key={prop.id} className="property-card">
                                 <Link to={`/propiedad/${prop.id}`} className="property-image-container" style={{ display: 'block' }}>
                                     <img src={prop.images?.[0] || prop.image} alt={prop.title || "Propiedad"} />
+                                    {prop.status && prop.status !== 'Disponible' && (
+                                        <span className={`status-badge ${prop.status.toLowerCase()}`}>
+                                            {prop.status}
+                                        </span>
+                                    )}
                                     {isAdmin && (
                                         <button className="delete-btn" onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleDelete(prop.id); }}>
                                             <i className="fas fa-trash"></i>
@@ -294,6 +300,14 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                                     <select name="type" value={newProperty.type} onChange={handleInputChange}>
                                         <option value="Venta">Venta</option>
                                         <option value="Renta">Renta</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Estado de la Propiedad</label>
+                                    <select name="status" value={newProperty.status} onChange={handleInputChange}>
+                                        <option value="Disponible">Disponible</option>
+                                        <option value="Vendido">Vendido</option>
+                                        <option value="Rentado">Rentado</option>
                                     </select>
                                 </div>
                                 <div className="form-group">

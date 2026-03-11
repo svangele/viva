@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS properties (
   title TEXT NOT NULL,
   price REAL,
   type TEXT,
+  status TEXT DEFAULT 'Disponible',
   location TEXT,
   m2_lote REAL,
   m2_construccion REAL,

@@ -86,6 +86,16 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                                         onChange={e => setEditForm({...editForm, price: parseFloat(e.target.value)})}
                                         placeholder="Precio"
                                     />
+                                    <select
+                                        className="edit-input"
+                                        value={editForm.status || 'Disponible'}
+                                        onChange={e => setEditForm({...editForm, status: e.target.value})}
+                                        style={{ marginTop: '10px' }}
+                                    >
+                                        <option value="Disponible">Disponible</option>
+                                        <option value="Vendido">Vendido</option>
+                                        <option value="Rentado">Rentado</option>
+                                    </select>
                                 </div>
                             )}
                             <p style={{ color: '#666', marginTop: '10px' }}>
@@ -122,7 +132,12 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                     </div>
                 </div>
 
-                <div className="detail-gallery">
+                <div className="detail-gallery" style={{ position: 'relative' }}>
+                    {property.status && property.status !== 'Disponible' && (
+                        <span className={`status-badge ${property.status.toLowerCase()}`}>
+                            {property.status}
+                        </span>
+                    )}
                     {property.images?.length > 0 ? (
                         property.images.map((img, i) => (
                             <img key={i} src={img} alt={`${property.title} ${i}`} />

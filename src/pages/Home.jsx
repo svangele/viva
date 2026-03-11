@@ -56,10 +56,10 @@ function Home({ currentSlide, setCurrentSlide, properties, isAdmin, handleDelete
                             <Link key={prop.id} to={`/propiedad/${prop.id}`} className="property-card gallery-item" style={{ textDecoration: 'none', color: 'inherit' }}>
                                 <div className="property-image">
                                     <img src={prop.image} alt="Propiedad" />
-                                    {isAdmin && (
-                                        <button className="delete-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDelete(prop.filename); }}>
-                                            <i className="fas fa-trash"></i>
-                                        </button>
+                                    {prop.status && prop.status !== 'Disponible' && (
+                                        <span className={`status-badge ${prop.status.toLowerCase()}`}>
+                                            {prop.status}
+                                        </span>
                                     )}
                                 </div>
                             </Link>

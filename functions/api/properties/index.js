@@ -31,12 +31,12 @@ export async function onRequestPost(context) {
 
             await env.DB.prepare(`
                 INSERT INTO properties (
-                    id, title, price, type, location, m2_lote, m2_construccion, 
+                    id, title, price, type, status, location, m2_lote, m2_construccion, 
                     bathrooms, parking, bedrooms, floors, level, description, 
                     coordinates, images, uploadedAt
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
-                    title=excluded.title, price=excluded.price, type=excluded.type,
+                    title=excluded.title, price=excluded.price, type=excluded.type, status=excluded.status,
                     location=excluded.location, m2_lote=excluded.m2_lote,
                     m2_construccion=excluded.m2_construccion, bathrooms=excluded.bathrooms,
                     parking=excluded.parking, bedrooms=excluded.bedrooms,
@@ -48,6 +48,7 @@ export async function onRequestPost(context) {
                 property.title,
                 property.price,
                 property.type,
+                property.status || 'Disponible',
                 property.location,
                 property.m2_lote,
                 property.m2_construccion,
@@ -110,7 +111,7 @@ export async function onRequestPut(context) {
 
         await env.DB.prepare(`
             UPDATE properties SET
-                title=?, price=?, type=?, location=?, m2_lote=?, m2_construccion=?, 
+                title=?, price=?, type=?, status=?, location=?, m2_lote=?, m2_construccion=?, 
                 bathrooms=?, parking=?, bedrooms=?, floors=?, level=?, description=?, 
                 coordinates=?
             WHERE id = ?
@@ -118,6 +119,7 @@ export async function onRequestPut(context) {
             property.title,
             property.price,
             property.type,
+            property.status || 'Disponible',
             property.location,
             property.m2_lote,
             property.m2_construccion,
