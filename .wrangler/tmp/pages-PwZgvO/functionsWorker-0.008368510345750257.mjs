@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// ../.wrangler/tmp/bundle-Y3faQC/checked-fetch.js
+// ../.wrangler/tmp/bundle-0og4ZW/checked-fetch.js
 var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
@@ -51,10 +51,22 @@ async function onRequestGet(context) {
 __name(onRequestGet, "onRequestGet");
 async function onRequestDelete(context) {
   const { env, params } = context;
-  const filename = params.filename;
+  const id = params.filename;
   try {
-    await env.R2_BUCKET.delete(filename);
-    return Response.json({ success: true, message: "Propiedad eliminada correctamente" });
+    const property = await env.DB.prepare("SELECT images FROM properties WHERE id = ?").bind(id).first();
+    if (property) {
+      if (property.images) {
+        const images = JSON.parse(property.images);
+        for (const imgUrl of images) {
+          const imgName = imgUrl.split("/").pop();
+          await env.R2_BUCKET.delete(imgName);
+        }
+      }
+      await env.DB.prepare("DELETE FROM properties WHERE id = ?").bind(id).run();
+      return Response.json({ success: true, message: "Propiedad eliminada correctamente" });
+    }
+    await env.R2_BUCKET.delete(id);
+    return Response.json({ success: true });
   } catch (e) {
     return new Response(JSON.stringify({ error: e.message }), {
       status: 500,
@@ -215,32 +227,6 @@ async function onRequestPut(context) {
   }
 }
 __name(onRequestPut, "onRequestPut");
-async function onRequestDelete2(context) {
-  const { env, params } = context;
-  const id = params.filename;
-  try {
-    const property = await env.DB.prepare("SELECT images FROM properties WHERE id = ?").bind(id).first();
-    if (property) {
-      if (property.images) {
-        const images = JSON.parse(property.images);
-        for (const imgUrl of images) {
-          const imgName = imgUrl.split("/").pop();
-          await env.R2_BUCKET.delete(imgName);
-        }
-      }
-      await env.DB.prepare("DELETE FROM properties WHERE id = ?").bind(id).run();
-      return Response.json({ success: true });
-    }
-    await env.R2_BUCKET.delete(id);
-    return Response.json({ success: true });
-  } catch (e) {
-    return new Response(JSON.stringify({ error: e.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" }
-    });
-  }
-}
-__name(onRequestDelete2, "onRequestDelete");
 
 // ../.wrangler/tmp/pages-PwZgvO/functionsRoutes-0.827578491926432.mjs
 var routes = [
@@ -264,13 +250,6 @@ var routes = [
     method: "POST",
     middlewares: [],
     modules: [onRequestPost]
-  },
-  {
-    routePath: "/api/properties",
-    mountPath: "/api/properties",
-    method: "DELETE",
-    middlewares: [],
-    modules: [onRequestDelete2]
   },
   {
     routePath: "/api/properties",
@@ -782,7 +761,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-Y3faQC/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-0og4ZW/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -814,7 +793,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-Y3faQC/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-0og4ZW/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

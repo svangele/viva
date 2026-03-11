@@ -79,10 +79,22 @@ __name(onRequestGet, "onRequestGet");
 __name2(onRequestGet, "onRequestGet");
 async function onRequestDelete(context) {
   const { env, params } = context;
-  const filename = params.filename;
+  const id = params.filename;
   try {
-    await env.R2_BUCKET.delete(filename);
-    return Response.json({ success: true, message: "Propiedad eliminada correctamente" });
+    const property = await env.DB.prepare("SELECT images FROM properties WHERE id = ?").bind(id).first();
+    if (property) {
+      if (property.images) {
+        const images = JSON.parse(property.images);
+        for (const imgUrl of images) {
+          const imgName = imgUrl.split("/").pop();
+          await env.R2_BUCKET.delete(imgName);
+        }
+      }
+      await env.DB.prepare("DELETE FROM properties WHERE id = ?").bind(id).run();
+      return Response.json({ success: true, message: "Propiedad eliminada correctamente" });
+    }
+    await env.R2_BUCKET.delete(id);
+    return Response.json({ success: true });
   } catch (e) {
     return new Response(JSON.stringify({ error: e.message }), {
       status: 500,
@@ -244,33 +256,6 @@ async function onRequestPut(context) {
 }
 __name(onRequestPut, "onRequestPut");
 __name2(onRequestPut, "onRequestPut");
-async function onRequestDelete2(context) {
-  const { env, params } = context;
-  const id = params.filename;
-  try {
-    const property = await env.DB.prepare("SELECT images FROM properties WHERE id = ?").bind(id).first();
-    if (property) {
-      if (property.images) {
-        const images = JSON.parse(property.images);
-        for (const imgUrl of images) {
-          const imgName = imgUrl.split("/").pop();
-          await env.R2_BUCKET.delete(imgName);
-        }
-      }
-      await env.DB.prepare("DELETE FROM properties WHERE id = ?").bind(id).run();
-      return Response.json({ success: true });
-    }
-    await env.R2_BUCKET.delete(id);
-    return Response.json({ success: true });
-  } catch (e) {
-    return new Response(JSON.stringify({ error: e.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" }
-    });
-  }
-}
-__name(onRequestDelete2, "onRequestDelete2");
-__name2(onRequestDelete2, "onRequestDelete");
 var routes = [
   {
     routePath: "/api/properties/:filename",
@@ -292,13 +277,6 @@ var routes = [
     method: "POST",
     middlewares: [],
     modules: [onRequestPost]
-  },
-  {
-    routePath: "/api/properties",
-    mountPath: "/api/properties",
-    method: "DELETE",
-    middlewares: [],
-    modules: [onRequestDelete2]
   },
   {
     routePath: "/api/properties",
