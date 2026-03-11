@@ -9,6 +9,7 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editForm, setEditForm] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         const found = properties.find(p => String(p.id) === id);
@@ -39,6 +40,41 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
         } finally {
             setSaving(false);
         }
+    };
+
+    const handlePhotoUpload = async (e) => {
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        setUploading(true);
+        const uploadedImages = [...(editForm.images || [])];
+
+        for (const file of files) {
+            const formData = new FormData();
+            formData.append('image', file);
+            try {
+                const res = await fetch(`${API_URL}/properties`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    uploadedImages.push(data.image);
+                }
+            } catch (err) {
+                console.error('Upload error:', err);
+            }
+        }
+
+        setEditForm(prev => ({ ...prev, images: uploadedImages }));
+        setUploading(false);
+    };
+
+    const removeImage = (index) => {
+        setEditForm(prev => ({
+            ...prev,
+            images: prev.images.filter((_, i) => i !== index)
+        }));
     };
 
     if (!property) {
@@ -132,20 +168,45 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                     </div>
                 </div>
 
-                <div className="detail-gallery" style={{ position: 'relative' }}>
-                    {property.status && property.status !== 'Disponible' && (
-                        <span className={`status-badge ${property.status.toLowerCase()}`}>
-                            {property.status}
-                        </span>
-                    )}
-                    {property.images?.length > 0 ? (
-                        property.images.map((img, i) => (
-                            <img key={i} src={img} alt={`${property.title} ${i}`} />
-                        ))
-                    ) : (
-                        <img src={property.image} alt={property.title} />
-                    )}
-                </div>
+                {isEditing ? (
+                    <div className="photo-upload-section" style={{ padding: '20px', background: '#f5f5f5', borderRadius: '12px', marginTop: '20px' }}>
+                        <h3 style={{ marginBottom: '15px' }}>Editar Fotos de la Propiedad</h3>
+                        <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap', marginBottom: '15px' }}>
+                            {(editForm.images || []).map((img, index) => (
+                                <div key={index} style={{ position: 'relative', width: '120px', height: '120px' }}>
+                                    <img src={img} alt="Vista previa" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                                    <button 
+                                        type="button" 
+                                        onClick={() => removeImage(index)}
+                                        style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '25px', height: '25px', cursor: 'pointer', fontSize: '14px', zIndex: 10 }}
+                                    >
+                                        &times;
+                                    </button>
+                                </div>
+                            ))}
+                            <label className="upload-btn" style={{ width: '120px', height: '120px', display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'var(--white)', border: '2px dashed #ccc', borderRadius: '8px', cursor: 'pointer' }}>
+                                <input type="file" multiple onChange={handlePhotoUpload} style={{ display: 'none' }} />
+                                <i className="fas fa-camera" style={{ fontSize: '24px', color: '#666' }}></i>
+                            </label>
+                        </div>
+                        {uploading && <p style={{ color: 'var(--forest-green)', fontWeight: 'bold' }}>Subiendo fotos, por favor espera...</p>}
+                    </div>
+                ) : (
+                    <div className="detail-gallery" style={{ position: 'relative' }}>
+                        {property.status && property.status !== 'Disponible' && (
+                            <span className={`status-badge ${property.status.toLowerCase()}`}>
+                                {property.status}
+                            </span>
+                        )}
+                        {property.images?.length > 0 ? (
+                            property.images.map((img, i) => (
+                                <img key={i} src={img} alt={`${property.title} ${i}`} />
+                            ))
+                        ) : (
+                            <img src={property.image} alt={property.title} />
+                        )}
+                    </div>
+                )}
 
                 <div className="detail-main">
                     <div className="detail-left">
