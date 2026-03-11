@@ -141,32 +141,3 @@ export async function onRequestPut(context) {
 }
 
 
-export async function onRequestDelete(context) {
-    const { env, params } = context;
-    const id = params.filename;
-
-    try {
-        const property = await env.DB.prepare("SELECT images FROM properties WHERE id = ?").bind(id).first();
-        
-        if (property) {
-            if (property.images) {
-                const images = JSON.parse(property.images);
-                for (const imgUrl of images) {
-                    const imgName = imgUrl.split('/').pop();
-                    await env.R2_BUCKET.delete(imgName);
-                }
-            }
-            await env.DB.prepare("DELETE FROM properties WHERE id = ?").bind(id).run();
-            return Response.json({ success: true });
-        }
-
-        // Fallback for direct image deletion if param is filename
-        await env.R2_BUCKET.delete(id);
-        return Response.json({ success: true });
-    } catch (e) {
-        return new Response(JSON.stringify({ error: e.message }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    }
-}
