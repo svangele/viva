@@ -217,7 +217,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
 
     return (
         <section className="property-list-page">
-            <div className="container">
+            <div className="container-full">
                 <div className="filters-container">
                     <div className="filter-group">
                         <label>Tipo</label>
@@ -249,8 +249,8 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                 <div className="property-grid">
                     {filteredProperties.length > 0 ? (
                         filteredProperties.map((prop) => (
-                            <div key={prop.id} className="property-card gallery-item">
-                                <div className="property-image" onClick={() => setSelectedProperty(prop)} style={{ cursor: 'pointer' }}>
+                            <div key={prop.id} className="property-card">
+                                <div className="property-image-container" onClick={() => setSelectedProperty(prop)} style={{ cursor: 'pointer' }}>
                                     <img src={prop.images?.[0] || prop.image} alt={prop.title || "Propiedad"} />
                                     {isAdmin && (
                                         <button className="delete-btn" onClick={(e) => { e.stopPropagation(); handleDelete(prop.id); }}>
