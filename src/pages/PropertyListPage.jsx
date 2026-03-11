@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 const API_URL = '/api';
 
@@ -250,14 +250,14 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                     {filteredProperties.length > 0 ? (
                         filteredProperties.map((prop) => (
                             <div key={prop.id} className="property-card">
-                                <div className="property-image-container" onClick={() => setSelectedProperty(prop)} style={{ cursor: 'pointer' }}>
+                                <Link to={`/propiedad/${prop.id}`} className="property-image-container" style={{ display: 'block' }}>
                                     <img src={prop.images?.[0] || prop.image} alt={prop.title || "Propiedad"} />
                                     {isAdmin && (
-                                        <button className="delete-btn" onClick={(e) => { e.stopPropagation(); handleDelete(prop.id); }}>
+                                        <button className="delete-btn" onClick={(e) => { e.stopPropagation(); e.preventDefault(); handleDelete(prop.id); }}>
                                             <i className="fas fa-trash"></i>
                                         </button>
                                     )}
-                                </div>
+                                </Link>
                                 <div className="property-info">
                                     <h3>{prop.title || "Propiedad en Querétaro"}</h3>
                                     <p className="price">{prop.price ? `$${prop.price.toLocaleString()}` : "Contactar para precio"}</p>
@@ -267,7 +267,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                                         {prop.bathrooms && <span><i className="fas fa-bath"></i> {prop.bathrooms}</span>}
                                         {prop.m2_construccion && <span><i className="fas fa-expand"></i> {prop.m2_construccion}m²</span>}
                                     </div>
-                                    <button className="view-details" onClick={() => setSelectedProperty(prop)}>Ver Detalles</button>
+                                    <Link to={`/propiedad/${prop.id}`} className="view-details" style={{ textDecoration: 'none', display: 'inline-block', textAlign: 'center' }}>Ver Detalles</Link>
                                 </div>
                             </div>
                         ))
@@ -275,8 +275,6 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                         <p style={{ textAlign: 'center', gridColumn: '1/-1', opacity: 0.6 }}>No se encontraron propiedades con esos filtros.</p>
                     )}
                 </div>
-
-                <PropertyDetailModal />
 
                 {isAdmin && (
                     <div className="admin-uploader" id="admin-form">

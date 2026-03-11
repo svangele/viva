@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import PropertyListPage from './pages/PropertyListPage';
+import PropertyDetailPage from './pages/PropertyDetailPage';
 
 function App() {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -138,6 +139,10 @@ function App() {
                                 fetchProperties={fetchProperties}
                             />
                         } 
+                    />
+                    <Route 
+                        path="/propiedad/:id" 
+                        element={<PropertyDetailPage properties={properties} />} 
                     />
                 </Routes>
 

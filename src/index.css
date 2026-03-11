@@ -257,6 +257,18 @@ body {
     border-color: var(--white);
 }
 
+.cta-button.black {
+    background: var(--dark-slate);
+    color: var(--white);
+    border-color: var(--dark-slate);
+}
+
+.cta-button.black:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--dark-slate);
+}
+
 .slider-dots {
     position: absolute;
     bottom: 40px;
@@ -1209,4 +1221,103 @@ body {
         flex-direction: column;
         align-items: stretch;
     }
-}
+}
+
+/* Detail Page */
+.detail-page {
+    padding-top: 120px;
+    padding-bottom: 80px;
+    background: var(--cream);
+    min-height: 100vh;
+}
+
+.detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.detail-header {
+    margin-bottom: 30px;
+}
+
+.detail-title {
+    font-size: 2.5rem;
+    color: var(--dark-slate);
+    margin-bottom: 10px;
+}
+
+.detail-price {
+    font-size: 2rem;
+    color: var(--gold);
+    font-weight: 700;
+}
+
+.detail-gallery {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) #eee;
+}
+
+.detail-gallery img {
+    height: 450px;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    object-fit: cover;
+}
+
+.detail-main {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+}
+
+.detail-content {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+}
+
+.detail-features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+    padding: 25px;
+    background: #fcfcfc;
+    border-radius: 12px;
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.feature-item strong {
+    font-size: 0.85rem;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.feature-item span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark-slate);
+}
+
+@media (max-width: 968px) {
+    .detail-main {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-gallery img {
+        height: 300px;
+    }
+}
+

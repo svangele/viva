@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const carouselImages = [
     { id: 1, url: "/images/carrusel1.png", title: "Encuentra tu Hogar", subtitle: "Expertos en Ventas y Rentas" },
@@ -26,7 +27,7 @@ function Home({ currentSlide, setCurrentSlide, properties, isAdmin, handleDelete
                                 <p className="hero-subtitle">Tu hogar soñado en Querétaro</p>
                                 <div className="hero-actions">
                                     <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cta-button secondary">Me Interesa</a>
-                                    <a href="/propiedades" className="cta-button">Ver Más</a>
+                                    <Link to="/propiedades" className="cta-button">Ver Más</Link>
                                 </div>
                             </div>
                         </div>
@@ -52,20 +53,20 @@ function Home({ currentSlide, setCurrentSlide, properties, isAdmin, handleDelete
                     </div>
                     <div className="property-grid">
                         {properties.slice(0, 6).map((prop) => (
-                            <div key={prop.id} className="property-card gallery-item">
+                            <Link key={prop.id} to={`/propiedad/${prop.id}`} className="property-card gallery-item" style={{ textDecoration: 'none', color: 'inherit' }}>
                                 <div className="property-image">
                                     <img src={prop.image} alt="Propiedad" />
                                     {isAdmin && (
-                                        <button className="delete-btn" onClick={() => handleDelete(prop.filename)}>
+                                        <button className="delete-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDelete(prop.filename); }}>
                                             <i className="fas fa-trash"></i>
                                         </button>
                                     )}
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                     <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                        <a href="/propiedades" className="cta-button">Ver Todas las Propiedades</a>
+                        <Link to="/propiedades" className="cta-button black">Ver Todas las Propiedades</Link>
                     </div>
                 </div>
             </section>
