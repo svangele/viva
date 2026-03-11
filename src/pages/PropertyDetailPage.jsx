@@ -94,10 +94,10 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
 
     const propertyFeatures = [
         { key: 'm2_lote', label: 'M² Lote', icon: 'fas fa-expand-arrows-alt' },
-        { key: 'm2_construccion', label: 'M² Construcción', icon: 'fas fa-ruler-combined' },
+        { key: 'm2_construccion', label: 'M² Constr', icon: 'fas fa-ruler-combined' },
         { key: 'bedrooms', label: 'Recámaras', icon: 'fas fa-bed' },
         { key: 'bathrooms', label: 'Baños', icon: 'fas fa-bath' },
-        { key: 'parking', label: 'Estacionamientos', icon: 'fas fa-car' },
+        { key: 'parking', label: 'Est.', icon: 'fas fa-car' },
         { key: 'floors', label: 'Pisos', icon: 'fas fa-layer-group' },
         { key: 'level', label: 'Nivel', icon: 'fas fa-building' }
     ];

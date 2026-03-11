@@ -178,10 +178,10 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                         
                         <div className="detail-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', padding: '20px', background: '#f9f9f9', borderRadius: '12px', marginBottom: '20px' }}>
                             {chars.m2_lote && <div><strong><i className="fas fa-expand-arrows-alt" style={{ color: 'var(--gold)', marginRight: '5px' }}></i> M² Lote:</strong> {chars.m2_lote}</div>}
-                            {chars.m2_construccion && <div><strong><i className="fas fa-ruler-combined" style={{ color: 'var(--gold)', marginRight: '5px' }}></i> M² Const:</strong> {chars.m2_construccion}</div>}
+                            {chars.m2_construccion && <div><strong><i className="fas fa-ruler-combined" style={{ color: 'var(--gold)', marginRight: '5px' }}></i> M² Constr:</strong> {chars.m2_construccion}</div>}
                             {chars.bedrooms && <div><strong><i className="fas fa-bed" style={{ color: 'var(--gold)', marginRight: '5px' }}></i> Recámaras:</strong> {chars.bedrooms}</div>}
                             {chars.bathrooms && <div><strong><i className="fas fa-bath" style={{ color: 'var(--gold)', marginRight: '5px' }}></i> Baños:</strong> {chars.bathrooms}</div>}
-                            {chars.parking && <div><strong><i className="fas fa-car" style={{ color: 'var(--gold)', marginRight: '5px' }}></i> Cochera:</strong> {chars.parking}</div>}
+                            {chars.parking && <div><strong><i className="fas fa-car" style={{ color: 'var(--gold)', marginRight: '5px' }}></i> Est.:</strong> {chars.parking}</div>}
                             {chars.floors && <div><strong><i className="fas fa-layer-group" style={{ color: 'var(--gold)', marginRight: '5px' }}></i> Pisos:</strong> {chars.floors}</div>}
                             {chars.level && <div><strong><i className="fas fa-building" style={{ color: 'var(--gold)', marginRight: '5px' }}></i> Nivel:</strong> {chars.level}</div>}
                         </div>

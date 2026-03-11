@@ -171,7 +171,7 @@ function App() {
                             <div className="footer-contact">
                                 <h4>Contacto</h4>
                                 <p>Tel: +52 442 108 0739</p>
-                                <p>Email: vivahomeinmuebles@gmail.com</p>
+                                <p>Email: contacto@vivahomeinmuebles.com</p>
                             </div>
                             <div className="footer-links">
                                 <h4>Enlaces</h4>
@@ -278,7 +278,7 @@ function App() {
                                 <div className="privacy-section">
                                     <h3>4. Derechos ARCO (Acceso, Rectificación, Cancelación y Oposición)</h3>
                                     <p>Usted tiene derecho a conocer qué datos tenemos de usted, para qué los utilizamos y las condiciones del uso que les damos. Asimismo, es su derecho solicitar la corrección de su información, que la eliminemos de nuestros registros o legalmente oponerse al uso para fines específicos.</p>
-                                    <p>Para ejercer estos derechos, debe enviar una solicitud al correo: <strong>vivahomeinmuebles@gmail.com</strong>.</p>
+                                    <p>Para ejercer estos derechos, debe enviar una solicitud al correo: <strong>contacto@vivahomeinmuebles.com</strong>.</p>
                                 </div>
 
                                 <div className="privacy-section">
