@@ -22,7 +22,7 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
     const handleSave = async () => {
         setSaving(true);
         try {
-            const res = await fetch(`${API_URL}/properties/${id}`, {
+            const res = await fetch(`${API_URL}/properties`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(editForm)
