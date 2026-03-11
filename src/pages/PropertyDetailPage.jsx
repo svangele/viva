@@ -92,6 +92,16 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
         ? `https://www.google.com/maps?q=${property.coordinates.lat},${property.coordinates.lng}&output=embed` 
         : null;
 
+    const propertyFeatures = [
+        { key: 'm2_lote', label: 'M² Lote', icon: 'fas fa-expand-arrows-alt' },
+        { key: 'm2_construccion', label: 'M² Construcción', icon: 'fas fa-ruler-combined' },
+        { key: 'bedrooms', label: 'Recámaras', icon: 'fas fa-bed' },
+        { key: 'bathrooms', label: 'Baños', icon: 'fas fa-bath' },
+        { key: 'parking', label: 'Estacionamientos', icon: 'fas fa-car' },
+        { key: 'floors', label: 'Pisos', icon: 'fas fa-layer-group' },
+        { key: 'level', label: 'Nivel', icon: 'fas fa-building' }
+    ];
+
     return (
         <div className="detail-page">
             <div className="detail-container">
@@ -228,17 +238,20 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                             )}
 
                             <div className="detail-features-grid">
-                                {['m2_lote', 'm2_construccion', 'bedrooms', 'bathrooms', 'parking', 'floors', 'level'].map(key => (
-                                    <div className="feature-item" key={key}>
-                                        <strong>{key.replace('_', ' ')}</strong>
+                                {propertyFeatures.map(feat => (
+                                    <div className="feature-item" key={feat.key}>
+                                        <strong style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <i className={feat.icon} style={{ color: 'var(--gold)' }}></i> 
+                                            {feat.label}
+                                        </strong>
                                         {isEditing ? (
                                             <input 
                                                 className="edit-input" 
-                                                value={editForm[key] || ''} 
-                                                onChange={e => setEditForm({...editForm, [key]: e.target.value})}
+                                                value={editForm[feat.key] || ''} 
+                                                onChange={e => setEditForm({...editForm, [feat.key]: e.target.value})}
                                             />
                                         ) : (
-                                            <span>{property[key]}</span>
+                                            <span>{property[feat.key]}</span>
                                         )}
                                     </div>
                                 ))}

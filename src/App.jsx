@@ -158,7 +158,7 @@ function App() {
                 </Routes>
 
                 <footer className="footer">
-                    <div className="container">
+                    <div className="container-full">
                         <div className="footer-grid">
                             <div className="footer-info">
                                 <img src="/images/logo.png" alt="Viva Home Logo" className="footer-logo" />
