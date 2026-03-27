@@ -461,6 +461,96 @@ body {
     color: #444;
 }
 
+/* Asesores Section */
+.asesores-section {
+    padding: 100px 0;
+    background: var(--white);
+}
+
+.asesores-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 60px;
+}
+
+.asesor-card {
+    text-align: center;
+    padding: 30px 20px;
+    background: var(--cream);
+    border-radius: 20px;
+    transition: var(--transition);
+    border: 1px solid rgba(197, 160, 89, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.asesor-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--forest-green));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.asesor-card:hover::before {
+    transform: scaleX(1);
+}
+
+.asesor-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    border-color: var(--gold);
+}
+
+.asesor-photo {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 25px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid rgba(197, 160, 89, 0.3);
+    transition: var(--transition);
+    position: relative;
+}
+
+.asesor-card:hover .asesor-photo {
+    border-color: var(--gold);
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(197, 160, 89, 0.3);
+}
+
+.asesor-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: var(--transition);
+}
+
+.asesor-card:hover .asesor-photo img {
+    transform: scale(1.08);
+}
+
+.asesor-info h3 {
+    font-size: 1.2rem;
+    color: var(--dark-slate);
+    margin-bottom: 6px;
+    font-family: var(--font-main);
+    font-weight: 600;
+}
+
+.asesor-info p {
+    color: var(--gold-dark);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
 /* About CTA */
 .about-cta {
     min-height: 450px;
@@ -1423,4 +1513,27 @@ body {
     margin-bottom: 20px;
 }
 
+/* Responsive - Asesores */
+@media (max-width: 900px) {
+    .asesores-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+}
+
+@media (max-width: 600px) {
+    .asesores-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .asesores-section {
+        padding: 60px 0;
+    }
+
+    .asesor-photo {
+        width: 140px;
+        height: 140px;
+    }
+}
 

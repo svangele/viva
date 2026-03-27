@@ -2,9 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const carouselImages = [
-    { id: 1, url: "/images/carrusel1.png", title: "Encuentra tu Hogar", subtitle: "Expertos en Ventas y Rentas" },
-    { id: 2, url: "/images/carrusel2.png", title: "Asesoría Profesional", subtitle: "Tomamos las mejores decisiones contigo" },
-    { id: 3, url: "/images/carrusel3.png", title: "Propiedades Exclusivas", subtitle: "Calidad y Plusvalía Garantizada" },
+    { id: 1, url: "/images/carrusel_new1.png", title: "Encuentra tu Hogar", subtitle: "Expertos en Ventas y Rentas" },
+    { id: 2, url: "/images/carrusel_new2.png", title: "Asesoría Profesional", subtitle: "Tomamos las mejores decisiones contigo" },
+    { id: 3, url: "/images/carrusel_new3.png", title: "Propiedades Exclusivas", subtitle: "Calidad y Plusvalía Garantizada" },
     { id: 4, url: "/images/carrusel4.png", title: "Tu Próximo Paso", subtitle: "Acompañandote en cada trámite" }
 ];
 
@@ -105,15 +105,45 @@ function Home({ currentSlide, setCurrentSlide, properties, isAdmin, handleDelete
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <div className="about-cta">
-                    <div className="about-cta-content">
-                        <h3>¿Listo para dar el siguiente paso?</h3>
-                        <p>Contáctanos hoy mismo y recibe asesoría profesional para tu próxima inversión inmobiliaria.</p>
+            <section className="asesores-section">
+                <div className="container">
+                    <div className="section-header">
+                        <h2>Nuestros Asesores</h2>
+                        <div className="header-line"></div>
+                        <p>Profesionales comprometidos con encontrar la propiedad ideal para ti.</p>
                     </div>
-                    <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cta-button">Hablemos por WhatsApp</a>
+                    <div className="asesores-grid">
+                        {[
+                            { name: "Patricia Vargas", role: "Directora General", photo: "/asesores/Patricia Vargas.png" },
+                            { name: "Jessica Rivera", role: "Asesora Inmobiliaria", photo: "/asesores/Jessica Rivera.png" },
+                            { name: "Ricardo Aranza", role: "Asesor Inmobiliario", photo: "/asesores/Ricardo Aranza.png" },
+                            { name: "Juan Alberto Rodríguez", role: "Asesor Inmobiliario", photo: "/asesores/Juan Alberto Rodriguez.png" },
+                            { name: "Arath Rivera", role: "Asesor Inmobiliario", photo: "/asesores/Arath Rivera.png" },
+                            { name: "Vania Soledad", role: "Asesora Inmobiliaria", photo: "/asesores/Vania Soledad.png" },
+                        ].map((asesor, index) => (
+                            <div className="asesor-card" key={index}>
+                                <div className="asesor-photo">
+                                    <img src={asesor.photo} alt={asesor.name} />
+                                </div>
+                                <div className="asesor-info">
+                                    <h3>{asesor.name}</h3>
+                                    <p>{asesor.role}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
+
+            <div className="about-cta">
+                <div className="about-cta-content">
+                    <h3>¿Listo para dar el siguiente paso?</h3>
+                    <p>Contáctanos hoy mismo y recibe asesoría profesional para tu próxima inversión inmobiliaria.</p>
+                </div>
+                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cta-button">Hablemos por WhatsApp</a>
+            </div>
         </main>
     );
 }

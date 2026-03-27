@@ -237,58 +237,71 @@ function App() {
                             <button className="close-privacy" onClick={() => setShowPrivacy(false)}>&times;</button>
                             <div className="privacy-content">
                                 <h2>Aviso de Privacidad</h2>
-                                <p className="privacy-intro"><strong>Responsable del tratamiento de sus datos personales:</strong> Viva Home Inmuebles, con domicilio en Querétaro, es responsable de recabar sus datos personales, del uso que se le dé a los mismos y de su protección.</p>
+                                <h3 style={{ textAlign: 'center', marginBottom: '1.5rem', color: 'var(--gold)' }}>ViVa Home Inmuebles</h3>
+                                <p className="privacy-intro">En cumplimiento con lo establecido por la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, se informa a los usuarios del sitio web que ViVa Home Inmuebles, representada por Patricia Vargas, con domicilio en Querétaro, México, es responsable del uso y protección de sus datos personales.</p>
 
                                 <div className="privacy-section">
-                                    <h3>1. Datos Personales que Recabamos</h3>
-                                    <p>Para las finalidades señaladas en el presente aviso, podemos recabar sus datos de forma directa (entrevistas, formularios) o a través de nuestro sitio web:</p>
+                                    <h3>Datos personales que se recaban</h3>
+                                    <p>A través de nuestro sitio web, formularios de contacto, llamadas telefónicas o medios digitales, podremos recabar los siguientes datos:</p>
                                     <ul>
-                                        <li><strong>Identificación:</strong> Nombre completo.</li>
-                                        <li><strong>Contacto:</strong> Correo electrónico, teléfono fijo y móvil.</li>
+                                        <li>Nombre completo</li>
+                                        <li>Número telefónico</li>
+                                        <li>Correo electrónico</li>
+                                        <li>Información relacionada con compra, venta o renta de inmuebles</li>
+                                        <li>Datos necesarios para la gestión de trámites inmobiliarios o financieros</li>
                                     </ul>
                                 </div>
 
                                 <div className="privacy-section">
-                                    <h3>2. Finalidades del Tratamiento</h3>
-                                    <p>Sus datos serán utilizados para las siguientes finalidades primarias:</p>
+                                    <h3>Finalidad del uso de los datos</h3>
+                                    <p>Los datos personales recabados serán utilizados para las siguientes finalidades:</p>
                                     <ul>
-                                        <li>Brindar asesoría inmobiliaria y gestión de compra, venta o renta de inmuebles.</li>
-                                        <li>Elaboración de contratos (promesa, compraventa, arrendamiento).</li>
-                                        <li>Intermediación ante notarías públicas, instituciones bancarias o de crédito (Infonavit, Fovissste).</li>
-                                        <li>Verificar la identidad y la veracidad de la información proporcionada.</li>
-                                    </ul>
-                                    <p>De manera secundaria, podremos utilizar su información para:</p>
-                                    <ul>
-                                        <li>Enviarle promociones o nuevos catálogos de propiedades.</li>
-                                        <li>Encuestas de satisfacción y calidad en el servicio.</li>
-                                    </ul>
-                                    <p className="privacy-note"><em>Nota: Si no desea que sus datos se utilicen para fines secundarios, puede manifestarlo enviando un correo a la dirección de contacto.</em></p>
-                                </div>
-
-                                <div className="privacy-section">
-                                    <h3>3. Transferencia de Datos</h3>
-                                    <p>Le informamos que sus datos personales pueden ser compartidos dentro y fuera del país con:</p>
-                                    <ul>
-                                        <li><strong>Notarías Públicas:</strong> Para la formalización de escrituras.</li>
-                                        <li><strong>Instituciones Financieras:</strong> Para el trámite de créditos hipotecarios.</li>
-                                        <li><strong>Autoridades:</strong> Cuando sea necesario para cumplir con leyes fiscales o de prevención de lavado de dinero (Ley Antilavado).</li>
+                                        <li>Brindar información sobre propiedades en venta o renta</li>
+                                        <li>Dar seguimiento a solicitudes de clientes potenciales</li>
+                                        <li>Contactar a los interesados para ofrecer asesoría inmobiliaria</li>
+                                        <li>Integrar expedientes para operaciones de compra, venta o arrendamiento</li>
+                                        <li>Enviar información sobre nuevos desarrollos, promociones o servicios inmobiliarios</li>
                                     </ul>
                                 </div>
 
                                 <div className="privacy-section">
-                                    <h3>4. Derechos ARCO (Acceso, Rectificación, Cancelación y Oposición)</h3>
-                                    <p>Usted tiene derecho a conocer qué datos tenemos de usted, para qué los utilizamos y las condiciones del uso que les damos. Asimismo, es su derecho solicitar la corrección de su información, que la eliminemos de nuestros registros o legalmente oponerse al uso para fines específicos.</p>
-                                    <p>Para ejercer estos derechos, debe enviar una solicitud al correo: <strong>contacto@vivahomeinmuebles.com</strong>.</p>
+                                    <h3>Protección de la información</h3>
+                                    <p>ViVa Home Inmuebles implementa medidas de seguridad administrativas, técnicas y físicas para proteger los datos personales contra daño, pérdida, alteración o acceso no autorizado.</p>
                                 </div>
 
                                 <div className="privacy-section">
-                                    <h3>5. Uso de Cookies en el Sitio Web</h3>
-                                    <p>Nuestro sitio utiliza "cookies" para mejorar su experiencia de navegación. Usted puede deshabilitarlas en la configuración de su navegador, aunque esto podría limitar ciertas funciones de búsqueda de propiedades en nuestra plataforma.</p>
+                                    <h3>Transferencia de datos</h3>
+                                    <p>Sus datos podrán ser compartidos únicamente cuando sea necesario con:</p>
+                                    <ul>
+                                        <li>Instituciones financieras o bancarias</li>
+                                        <li>Notarías públicas</li>
+                                        <li>Desarrolladores o propietarios de inmuebles</li>
+                                        <li>Autoridades competentes cuando la ley lo requiera</li>
+                                    </ul>
                                 </div>
 
                                 <div className="privacy-section">
-                                    <h3>6. Cambios al Aviso de Privacidad</h3>
-                                    <p>Viva Home Inmuebles se reserva el derecho de efectuar en cualquier momento modificaciones o actualizaciones al presente aviso para la atención de novedades legislativas o políticas internas. Estas estarán disponibles en nuestra página web: <strong>vivahomeinmuebles.com</strong>.</p>
+                                    <h3>Derechos ARCO</h3>
+                                    <p>El titular de los datos personales tiene derecho a Acceder, Rectificar, Cancelar u Oponerse (Derechos ARCO) al tratamiento de sus datos.</p>
+                                    <p>Para ejercer estos derechos puede enviar una solicitud al correo electrónico: <strong>vivahomeinmuebles@gmail.com</strong></p>
+                                    <p>Incluyendo:</p>
+                                    <ul>
+                                        <li>Nombre completo</li>
+                                        <li>Medio de contacto</li>
+                                        <li>Descripción clara de la solicitud</li>
+                                    </ul>
+                                </div>
+
+                                <div className="privacy-section">
+                                    <h3>Modificaciones al aviso de privacidad</h3>
+                                    <p>ViVa Home Inmuebles se reserva el derecho de realizar modificaciones al presente aviso de privacidad, las cuales serán publicadas en este mismo sitio web.</p>
+                                </div>
+
+                                <div className="privacy-section">
+                                    <h3>Contacto</h3>
+                                    <p>Para cualquier duda relacionada con este aviso de privacidad, puede comunicarse a:</p>
+                                    <p>📧 vivahomeinmuebles@gmail.com</p>
+                                    <p>📞 442 108 0739 / 442 202 4850</p>
                                 </div>
                             </div>
                         </div>
