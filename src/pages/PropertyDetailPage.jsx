@@ -42,14 +42,14 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                     
                     doc.setFont('helvetica', 'bold');
                     doc.setFontSize(10);
-                    doc.text(property.title, 15, 16);
+                    doc.text(property.title, 15, 15);
                     
                     const priceStr = `$${property.price?.toLocaleString()}`;
                     const locationStr = property.location;
                     doc.setFont('helvetica', 'normal');
                     doc.setFontSize(8);
                     doc.setTextColor(80);
-                    doc.text(` • ${priceStr} • ${locationStr}`, 15 + doc.getTextWidth(property.title), 16);
+                    doc.text(`${priceStr}  •  ${locationStr}`, 15, 20);
                     
                     // Footer
                     doc.setDrawColor(0);
@@ -85,8 +85,8 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                 }
 
                 let heightLeft = imgHeight;
-                let position = 20; // Start below header
-                const maxPageHeight = pageHeight - 40; // Space for header/footer
+                let position = 25; // Adjusted down to avoid multi-line header
+                const maxPageHeight = pageHeight - 45; // Space for header/footer
 
                 pdf.addImage(imgData, 'JPEG', 15, position, imgWidth, imgHeight);
                 heightLeft -= maxPageHeight;
