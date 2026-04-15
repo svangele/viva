@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const API_URL = '/api';
 
@@ -10,6 +12,7 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
     const [editForm, setEditForm] = useState(null);
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
     useEffect(() => {
         const found = properties.find(p => String(p.id) === id);
@@ -19,6 +22,94 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
         }
         window.scrollTo(0, 0);
     }, [id, properties]);
+
+    const generatePDF = async () => {
+        setIsGeneratingPDF(true);
+        try {
+            // Create a hidden container for the PDF content
+            const element = document.createElement('div');
+            element.style.position = 'absolute';
+            element.style.left = '-9999px';
+            element.style.width = '800px';
+            element.style.padding = '40px';
+            element.style.backgroundColor = '#ffffff';
+            element.style.color = '#333333';
+            element.style.fontFamily = 'Arial, sans-serif';
+
+            // Clean design content
+            let content = `
+                <div style="border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px;">
+                    <h1 style="margin: 0; font-size: 28px; text-transform: uppercase;">${property.title}</h1>
+                    <h2 style="margin: 10px 0 0; color: #555; font-size: 22px;">$${property.price?.toLocaleString()}</h2>
+                    <p style="margin: 5px 0 0; color: #777;">${property.location}</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+            `;
+
+            const allFeatures = [...propertyFeatures, ...serviceFeatures];
+            allFeatures.forEach(feat => {
+                if (property[feat.key]) {
+                    content += `
+                        <div style="padding: 10px; border-bottom: 1px solid #eee;">
+                            <strong style="font-size: 14px; color: #555;">${feat.label}:</strong>
+                            <span style="font-size: 14px; margin-left: 10px;">${property[feat.key]}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            content += `
+                </div>
+                <div style="margin-bottom: 30px;">
+                    <h3 style="border-bottom: 1px solid #333; padding-bottom: 5px;">Descripción</h3>
+                    <p style="font-size: 14px; line-height: 1.6; white-space: pre-line;">${property.description}</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            `;
+
+            // Max 6 images
+            const imagesToPrint = (property.images || []).slice(0, 6);
+            if (imagesToPrint.length === 0 && property.image) imagesToPrint.push(property.image);
+
+            for (const imgUrl of imagesToPrint) {
+                content += `
+                    <div style="height: 250px; overflow: hidden; border-radius: 4px;">
+                        <img src="${imgUrl}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" />
+                    </div>
+                `;
+            }
+
+            content += `</div>`;
+            element.innerHTML = content;
+            document.body.appendChild(element);
+
+            // Give it a moment to load images
+            await new Promise(resolve => setTimeout(resolve, 1000));
+
+            const canvas = await html2canvas(element, {
+                useCORS: true,
+                scale: 2,
+                logging: false,
+                allowTaint: true
+            });
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`Ficha-${property.title.replace(/\s+/g, '_')}.pdf`);
+            
+            document.body.removeChild(element);
+        } catch (err) {
+            console.error('PDF generation error:', err);
+            alert('Error al generar el PDF. Verifica la conexión.');
+        } finally {
+            setIsGeneratingPDF(false);
+        }
+    };
 
     const handleSave = async () => {
         setSaving(true);
@@ -169,11 +260,16 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                         </div>
 
                         {isAdmin && (
-                            <div className="edit-actions">
+                            <div className="edit-actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                                 {!isEditing ? (
-                                    <button className="edit-btn" onClick={() => setIsEditing(true)}>
-                                        <i className="fas fa-edit"></i> Modificar Propiedad
-                                    </button>
+                                    <>
+                                        <button className="edit-btn" onClick={() => setIsEditing(true)}>
+                                            <i className="fas fa-edit"></i> Modificar
+                                        </button>
+                                        <button className="save-btn" onClick={generatePDF} disabled={isGeneratingPDF} style={{ background: '#333' }}>
+                                            <i className="fas fa-file-pdf"></i> {isGeneratingPDF ? 'Generando...' : 'Generar Ficha'}
+                                        </button>
+                                    </>
                                 ) : (
                                     <>
                                         <button className="save-btn" onClick={handleSave} disabled={saving}>

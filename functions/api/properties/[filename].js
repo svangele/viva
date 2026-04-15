@@ -14,6 +14,7 @@ export async function onRequestGet(context) {
         headers.set('etag', object.httpEtag);
         // Cache the image for performance
         headers.set('Cache-Control', 'public, max-age=31536000');
+        headers.set('Access-Control-Allow-Origin', '*');
 
         return new Response(object.body, { headers });
     } catch (e) {
