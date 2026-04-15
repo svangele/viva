@@ -27,6 +27,14 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
         floors: '',
         level: '',
         description: '',
+        water_storage: '',
+        gas_storage: '',
+        is_private: '',
+        maintenance_fee: '',
+        service_gas: '',
+        service_light: '',
+        service_water: '',
+        service_internet: '',
         coordinates: { lat: '', lng: '' },
         images: []
     });
@@ -134,6 +142,8 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                 setNewProperty({
                     title: '', price: '', type: 'Venta', status: 'Disponible', location: '', m2_lote: '', m2_construccion: '',
                     bathrooms: '', parking: '', bedrooms: '', floors: '', level: '', description: '',
+                    water_storage: '', gas_storage: '', is_private: '', maintenance_fee: '',
+                    service_gas: '', service_light: '', service_water: '', service_internet: '',
                     coordinates: { lat: '', lng: '' }, images: []
                 });
                 if (fetchProperties) fetchProperties();
@@ -353,6 +363,44 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                                 <div className="form-group full-width">
                                     <label>Descripción</label>
                                     <textarea name="description" value={newProperty.description} onChange={handleInputChange} placeholder="Describe los detalles de la propiedad..." rows="5"></textarea>
+                                </div>
+                            </div>
+
+                            <div className="section-divider" style={{ margin: '2rem 0', borderTop: '1px solid #eee', paddingTop: '2rem' }}>
+                                <h4 style={{ marginBottom: '1.5rem', color: 'var(--gold)' }}>Servicios y Equipamiento</h4>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>Almacenamiento de Agua</label>
+                                        <input type="text" name="water_storage" value={newProperty.water_storage} onChange={handleInputChange} placeholder="Ej. Cisterna 5000L" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Almacenamiento de Gas</label>
+                                        <input type="text" name="gas_storage" value={newProperty.gas_storage} onChange={handleInputChange} placeholder="Ej. Tanque estacionario 300L" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>¿Es Privada Cerrada?</label>
+                                        <input type="text" name="is_private" value={newProperty.is_private} onChange={handleInputChange} placeholder="Ej. Sí, con vigilancia 24/7" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Pago de Mantenimiento</label>
+                                        <input type="text" name="maintenance_fee" value={newProperty.maintenance_fee} onChange={handleInputChange} placeholder="Ej. $1,200 mensuales" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Servicio de Gas</label>
+                                        <input type="text" name="service_gas" value={newProperty.service_gas} onChange={handleInputChange} placeholder="Ej. Gas natural disponible" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Servicio de Luz</label>
+                                        <input type="text" name="service_light" value={newProperty.service_light} onChange={handleInputChange} placeholder="Ej. CFE trifásica" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Servicio de Agua</label>
+                                        <input type="text" name="service_water" value={newProperty.service_water} onChange={handleInputChange} placeholder="Ej. Agua de pozo / CEA" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Internet</label>
+                                        <input type="text" name="service_internet" value={newProperty.service_internet} onChange={handleInputChange} placeholder="Ej. Fibra óptica Telmex/Totalplay" />
+                                    </div>
                                 </div>
                             </div>
 

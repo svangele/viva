@@ -15,5 +15,13 @@ CREATE TABLE IF NOT EXISTS properties (
   description TEXT,
   coordinates TEXT, -- Stored as JSON string {"lat": ..., "lng": ...}
   images TEXT,      -- Stored as JSON array string ["url1", "url2", ...]
+  water_storage TEXT,
+  gas_storage TEXT,
+  is_private TEXT,
+  maintenance_fee TEXT,
+  service_gas TEXT,
+  service_light TEXT,
+  service_water TEXT,
+  service_internet TEXT,
   uploadedAt TEXT
 );

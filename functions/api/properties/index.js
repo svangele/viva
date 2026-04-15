@@ -33,8 +33,10 @@ export async function onRequestPost(context) {
                 INSERT INTO properties (
                     id, title, price, type, status, location, m2_lote, m2_construccion, 
                     bathrooms, parking, bedrooms, floors, level, description, 
-                    coordinates, images, uploadedAt
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    coordinates, images, water_storage, gas_storage, is_private, 
+                    maintenance_fee, service_gas, service_light, service_water, 
+                    service_internet, uploadedAt
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
                     title=excluded.title, price=excluded.price, type=excluded.type, status=excluded.status,
                     location=excluded.location, m2_lote=excluded.m2_lote,
@@ -42,7 +44,11 @@ export async function onRequestPost(context) {
                     parking=excluded.parking, bedrooms=excluded.bedrooms,
                     floors=excluded.floors, level=excluded.level,
                     description=excluded.description, coordinates=excluded.coordinates,
-                    images=excluded.images
+                    images=excluded.images, water_storage=excluded.water_storage,
+                    gas_storage=excluded.gas_storage, is_private=excluded.is_private,
+                    maintenance_fee=excluded.maintenance_fee, service_gas=excluded.service_gas,
+                    service_light=excluded.service_light, service_water=excluded.service_water,
+                    service_internet=excluded.service_internet
             `).bind(
                 id,
                 property.title,
@@ -60,6 +66,14 @@ export async function onRequestPost(context) {
                 property.description,
                 JSON.stringify(property.coordinates),
                 JSON.stringify(property.images),
+                property.water_storage,
+                property.gas_storage,
+                property.is_private,
+                property.maintenance_fee,
+                property.service_gas,
+                property.service_light,
+                property.service_water,
+                property.service_internet,
                 uploadedAt
             ).run();
 
@@ -113,7 +127,9 @@ export async function onRequestPut(context) {
             UPDATE properties SET
                 title=?, price=?, type=?, status=?, location=?, m2_lote=?, m2_construccion=?, 
                 bathrooms=?, parking=?, bedrooms=?, floors=?, level=?, description=?, 
-                coordinates=?, images=?
+                coordinates=?, images=?, water_storage=?, gas_storage=?, is_private=?, 
+                maintenance_fee=?, service_gas=?, service_light=?, service_water=?, 
+                service_internet=?
             WHERE id = ?
         `).bind(
             property.title,
@@ -131,6 +147,14 @@ export async function onRequestPut(context) {
             property.description,
             JSON.stringify(property.coordinates),
             JSON.stringify(property.images || []),
+            property.water_storage,
+            property.gas_storage,
+            property.is_private,
+            property.maintenance_fee,
+            property.service_gas,
+            property.service_light,
+            property.service_water,
+            property.service_internet,
             id
         ).run();
 

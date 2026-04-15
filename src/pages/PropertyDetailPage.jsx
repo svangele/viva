@@ -99,7 +99,18 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
         { key: 'bathrooms', label: 'Baños', icon: 'fas fa-bath' },
         { key: 'parking', label: 'Est.', icon: 'fas fa-car' },
         { key: 'floors', label: 'Pisos', icon: 'fas fa-layer-group' },
-        { key: 'level', label: 'Nivel', icon: 'fas fa-building' }
+        { key: 'level', label: 'Nivel', icon: 'fas fa-building' },
+        { key: 'is_private', label: 'Privada', icon: 'fas fa-shield-alt' },
+        { key: 'maintenance_fee', label: 'Mantenimiento', icon: 'fas fa-money-bill-alt' }
+    ];
+
+    const serviceFeatures = [
+        { key: 'water_storage', label: 'Alm. Agua', icon: 'fas fa-faucet' },
+        { key: 'gas_storage', label: 'Alm. Gas', icon: 'fas fa-fire' },
+        { key: 'service_gas', label: 'Gas', icon: 'fas fa-burn' },
+        { key: 'service_light', label: 'Luz', icon: 'fas fa-bolt' },
+        { key: 'service_water', label: 'Agua', icon: 'fas fa-tint' },
+        { key: 'service_internet', label: 'Internet', icon: 'fas fa-wifi' }
     ];
 
     return (
@@ -239,22 +250,49 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
 
                             <div className="detail-features-grid">
                                 {propertyFeatures.map(feat => (
-                                    <div className="feature-item" key={feat.key}>
-                                        <strong style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <i className={feat.icon} style={{ color: 'var(--gold)' }}></i> 
-                                            {feat.label}
-                                        </strong>
-                                        {isEditing ? (
-                                            <input 
-                                                className="edit-input" 
-                                                value={editForm[feat.key] || ''} 
-                                                onChange={e => setEditForm({...editForm, [feat.key]: e.target.value})}
-                                            />
-                                        ) : (
-                                            <span>{property[feat.key]}</span>
-                                        )}
-                                    </div>
+                                    (property[feat.key] || isEditing) && (
+                                        <div className="feature-item" key={feat.key}>
+                                            <strong style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <i className={feat.icon} style={{ color: 'var(--gold)' }}></i> 
+                                                {feat.label}
+                                            </strong>
+                                            {isEditing ? (
+                                                <input 
+                                                    className="edit-input" 
+                                                    value={editForm[feat.key] || ''} 
+                                                    onChange={e => setEditForm({...editForm, [feat.key]: e.target.value})}
+                                                />
+                                            ) : (
+                                                <span>{property[feat.key]}</span>
+                                            )}
+                                        </div>
+                                    )
                                 ))}
+                            </div>
+
+                            <div className="services-section" style={{ marginTop: '30px', padding: '20px', background: '#fcfcfc', borderRadius: '12px', border: '1px solid #eee' }}>
+                                <h3 style={{ marginBottom: '20px', fontSize: '1.2rem' }}>Servicios y Equipamiento</h3>
+                                <div className="detail-features-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+                                    {serviceFeatures.map(feat => (
+                                        (property[feat.key] || isEditing) && (
+                                            <div className="feature-item" key={feat.key}>
+                                                <strong style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <i className={feat.icon} style={{ color: 'var(--gold)' }}></i> 
+                                                    {feat.label}
+                                                </strong>
+                                                {isEditing ? (
+                                                    <input 
+                                                        className="edit-input" 
+                                                        value={editForm[feat.key] || ''} 
+                                                        onChange={e => setEditForm({...editForm, [feat.key]: e.target.value})}
+                                                    />
+                                                ) : (
+                                                    <span>{property[feat.key]}</span>
+                                                )}
+                                            </div>
+                                        )
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
