@@ -26,131 +26,131 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
     const generatePDF = async () => {
         setIsGeneratingPDF(true);
         try {
-            const element = document.createElement('div');
-            element.style.position = 'absolute';
-            element.style.left = '-9999px';
-            element.style.width = '750px';
-            element.style.padding = '50px';
-            element.style.backgroundColor = '#ffffff';
-            element.style.color = '#000000';
-            element.style.fontFamily = '"Helvetica", "Arial", sans-serif';
-            element.style.fontSize = '10pt';
-            element.style.lineHeight = '1.4';
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const dateStr = new Date().toLocaleDateString('es-MX');
 
-            const imagesToPrint = [...(property.images || [])];
-            if (imagesToPrint.length === 0 && property.image) imagesToPrint.push(property.image);
-            
-            const mainPhoto = imagesToPrint[0];
-            const secondaryPhotos = imagesToPrint.slice(1, 6);
+            const addDecorations = (doc) => {
+                const totalPages = doc.internal.getNumberOfPages();
+                for (let i = 1; i <= totalPages; i++) {
+                    doc.setPage(i);
+                    // Header
+                    doc.setDrawColor(0);
+                    doc.setLineWidth(0.5);
+                    doc.line(15, 10, pageWidth - 15, 10);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(10);
+                    doc.text(property.title, 15, 16);
+                    
+                    // Footer
+                    doc.line(15, pageHeight - 15, pageWidth - 15, pageHeight - 15);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(9);
+                    doc.setTextColor(100);
+                    doc.text(`Ficha generada el ${dateStr}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+                    doc.setTextColor(0);
+                }
+            };
 
-            let content = `
-                <div style="border-bottom: 1.5px solid #000; padding-bottom: 20px; margin-bottom: 25px;">
-                    <h1 style="margin: 0; font-size: 18pt; font-weight: bold; letter-spacing: -0.5px;">${property.title}</h1>
-                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px;">
-                        <h2 style="margin: 0; font-size: 16pt; color: #333;">$${property.price?.toLocaleString()}</h2>
+            const captureAndAdd = async (htmlContent, startNewPage = false) => {
+                const container = document.createElement('div');
+                container.style.position = 'absolute';
+                container.style.left = '-9999px';
+                container.style.width = '700px';
+                container.style.padding = '20px 0'; // Space for internal flow
+                container.style.backgroundColor = '#ffffff';
+                container.style.fontFamily = 'Arial, sans-serif';
+                container.innerHTML = htmlContent;
+                document.body.appendChild(container);
+
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                const canvas = await html2canvas(container, { useCORS: true, scale: 3, backgroundColor: '#ffffff' });
+                document.body.removeChild(container);
+
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const imgWidth = pageWidth - 30; // Margin 15 each side
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                if (startNewPage && pdf.internal.getNumberOfPages() > 0) {
+                    pdf.addPage();
+                }
+
+                let heightLeft = imgHeight;
+                let position = 20; // Start below header
+                const maxPageHeight = pageHeight - 40; // Space for header/footer
+
+                pdf.addImage(imgData, 'JPEG', 15, position, imgWidth, imgHeight);
+                heightLeft -= maxPageHeight;
+
+                while (heightLeft > 0) {
+                    position = heightLeft - imgHeight + 20;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 15, position, imgWidth, imgHeight);
+                    heightLeft -= maxPageHeight;
+                }
+            };
+
+            // Part 1: Main Info
+            const images = [...(property.images || [])];
+            if (images.length === 0 && property.image) images.push(property.image);
+            const mainPhoto = images[0];
+            const secondaryPhotos = images.slice(1, 6);
+
+            const infoHtml = `
+                <div style="padding-top: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                        <h2 style="margin: 0; font-size: 18pt; color: #333;">$${property.price?.toLocaleString()}</h2>
                         <span style="font-size: 10pt; color: #666;">${property.location}</span>
                     </div>
-                </div>
 
-                <div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: flex-start;">
-                    <div style="flex: 1;">
-                        <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 15px;">Características</h3>
-                        <div style="display: flex; flex-direction: column;">
-            `;
-
-            const allFeatures = [...propertyFeatures, ...serviceFeatures];
-            allFeatures.forEach(feat => {
-                if (property[feat.key]) {
-                    content += `
-                        <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 9pt;">
-                            <span style="font-weight: bold;">${feat.label}</span>
-                            <span>${property[feat.key]}</span>
+                    <div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: flex-start;">
+                        <div style="flex: 1;">
+                            <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1.5px solid #000; padding-bottom: 5px; margin-bottom: 15px;">Características</h3>
+                            ${([...propertyFeatures, ...serviceFeatures])
+                                .filter(f => property[f.key])
+                                .map(f => `
+                                    <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 9pt;">
+                                        <span style="font-weight: bold;">${f.label}</span>
+                                        <span>${property[f.key]}</span>
+                                    </div>
+                                `).join('')}
                         </div>
-                    `;
-                }
-            });
-
-            content += `
+                        <div style="flex: 1;">
+                            ${mainPhoto ? `<img src="${mainPhoto}" crossorigin="anonymous" style="width: 100%; height: 320px; object-fit: cover; border: 1px solid #eee;" />` : ''}
                         </div>
                     </div>
-                    <div style="flex: 1;">
-                        ${mainPhoto ? `
-                            <div style="width: 100%; height: 320px; overflow: hidden; border: 1px solid #eee;">
-                                <img src="${mainPhoto}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" />
-                            </div>
-                        ` : ''}
+
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1.5px solid #000; padding-bottom: 5px; margin-bottom: 15px;">Descripción</h3>
+                        <p style="text-align: justify; color: #222; margin: 0; font-size: 10pt; line-height: 1.6;">${property.description}</p>
                     </div>
                 </div>
-
-                <div style="margin-bottom: 30px;">
-                    <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 15px;">Descripción</h3>
-                    <p style="text-align: justify; color: #222; margin: 0; font-size: 10pt;">${property.description}</p>
-                </div>
             `;
-
-            if (secondaryPhotos.length > 0) {
-                content += `
-                    <div style="margin-top: 20px;">
-                        <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 20px;">Fotos Adicionales</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                `;
-                
-                secondaryPhotos.forEach(imgUrl => {
-                    content += `
-                        <div style="height: 200px; overflow: hidden; border: 1px solid #eee;">
-                            <img src="${imgUrl}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" />
-                        </div>
-                    `;
-                });
-
-                content += `
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Simplified Footer
-            content += `
-                <div style="margin-top: 40px; text-align: center; border-top: 1px solid #000; padding-top: 15px; color: #666; font-size: 9pt;">
-                    Ficha generada el ${new Date().toLocaleDateString('es-MX')}
-                </div>
-            `;
-
-            element.innerHTML = content;
-            document.body.appendChild(element);
-
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            const canvas = await html2canvas(element, {
-                useCORS: true,
-                scale: 3,
-                logging: false,
-                backgroundColor: '#ffffff'
-            });
-
-            const imgData = canvas.toDataURL('image/jpeg', 0.95);
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            const contentHeight = (canvas.height * pdfWidth) / canvas.width;
             
-            let heightLeft = contentHeight;
-            let position = 0;
+            await captureAndAdd(infoHtml);
 
-            pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, contentHeight);
-            heightLeft -= pdfHeight;
-
-            while (heightLeft > 0) {
-                position = heightLeft - contentHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, contentHeight);
-                heightLeft -= pdfHeight;
+            // Part 2: Secondary Photos (on a new page)
+            if (secondaryPhotos.length > 0) {
+                const photosHtml = `
+                    <div style="padding-top: 10px;">
+                        <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1.5px solid #000; padding-bottom: 5px; margin-bottom: 25px;">Fotografías Adicionales</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            ${secondaryPhotos.map(img => `
+                                <div style="height: 250px; overflow: hidden; border: 1px solid #eee;">
+                                    <img src="${img}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" />
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                await captureAndAdd(photosHtml, true);
             }
 
+            addDecorations(pdf);
             pdf.save(`Ficha-${property.title.replace(/\s+/g, '_')}.pdf`);
-            document.body.removeChild(element);
         } catch (err) {
-            console.error('PDF generation error:', err);
+            console.error('PDF error:', err);
             alert('Error al generar el PDF.');
         } finally {
             setIsGeneratingPDF(false);
