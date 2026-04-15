@@ -37,15 +37,23 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                     doc.setPage(i);
                     // Header
                     doc.setDrawColor(0);
-                    doc.setLineWidth(0.5);
+                    doc.setLineWidth(0.4);
                     doc.line(15, 10, pageWidth - 15, 10);
+                    
                     doc.setFont('helvetica', 'bold');
                     doc.setFontSize(10);
                     doc.text(property.title, 15, 16);
                     
-                    // Footer
-                    doc.line(15, pageHeight - 15, pageWidth - 15, pageHeight - 15);
+                    const priceStr = `$${property.price?.toLocaleString()}`;
+                    const locationStr = property.location;
                     doc.setFont('helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor(80);
+                    doc.text(` • ${priceStr} • ${locationStr}`, 15 + doc.getTextWidth(property.title), 16);
+                    
+                    // Footer
+                    doc.setDrawColor(0);
+                    doc.line(15, pageHeight - 15, pageWidth - 15, pageHeight - 15);
                     doc.setFontSize(9);
                     doc.setTextColor(100);
                     doc.text(`Ficha generada el ${dateStr}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
