@@ -107,11 +107,6 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
 
             const infoHtml = `
                 <div style="padding-top: 10px;">
-                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                        <h2 style="margin: 0; font-size: 18pt; color: #333;">$${property.price?.toLocaleString()}</h2>
-                        <span style="font-size: 10pt; color: #666;">${property.location}</span>
-                    </div>
-
                     <div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: flex-start;">
                         <div style="flex: 1;">
                             <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1.5px solid #000; padding-bottom: 5px; margin-bottom: 15px;">Características</h3>
