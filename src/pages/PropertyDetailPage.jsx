@@ -29,13 +29,13 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
             const element = document.createElement('div');
             element.style.position = 'absolute';
             element.style.left = '-9999px';
-            element.style.width = '750px'; // Slightly narrower to ensure margins
+            element.style.width = '750px';
             element.style.padding = '50px';
             element.style.backgroundColor = '#ffffff';
             element.style.color = '#000000';
             element.style.fontFamily = '"Helvetica", "Arial", sans-serif';
             element.style.fontSize = '10pt';
-            element.style.lineHeight = '1.5';
+            element.style.lineHeight = '1.4';
 
             const imagesToPrint = [...(property.images || [])];
             if (imagesToPrint.length === 0 && property.image) imagesToPrint.push(property.image);
@@ -44,30 +44,25 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
             const secondaryPhotos = imagesToPrint.slice(1, 6);
 
             let content = `
-                <div style="border-bottom: 1.5px solid #000; padding-bottom: 25px; margin-bottom: 30px;">
-                    <h1 style="margin: 0; font-size: 24pt; font-weight: bold; letter-spacing: -0.5px;">${property.title}</h1>
-                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 15px;">
-                        <h2 style="margin: 0; font-size: 18pt; color: #333;">$${property.price?.toLocaleString()}</h2>
-                        <span style="font-size: 11pt; color: #666;">${property.location}</span>
+                <div style="border-bottom: 1.5px solid #000; padding-bottom: 20px; margin-bottom: 25px;">
+                    <h1 style="margin: 0; font-size: 18pt; font-weight: bold; letter-spacing: -0.5px;">${property.title}</h1>
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px;">
+                        <h2 style="margin: 0; font-size: 16pt; color: #333;">$${property.price?.toLocaleString()}</h2>
+                        <span style="font-size: 10pt; color: #666;">${property.location}</span>
                     </div>
                 </div>
 
-                ${mainPhoto ? `
-                    <div style="width: 100%; height: 400px; overflow: hidden; margin-bottom: 35px; border: 1px solid #eee;">
-                        <img src="${mainPhoto}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" />
-                    </div>
-                ` : ''}
-
-                <div style="margin-bottom: 40px;">
-                    <h3 style="font-size: 12pt; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 8px; margin-bottom: 20px;">Características Técnicas</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px;">
+                <div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: flex-start;">
+                    <div style="flex: 1;">
+                        <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 15px;">Características</h3>
+                        <div style="display: flex; flex-direction: column;">
             `;
 
             const allFeatures = [...propertyFeatures, ...serviceFeatures];
             allFeatures.forEach(feat => {
                 if (property[feat.key]) {
                     content += `
-                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+                        <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 9pt;">
                             <span style="font-weight: bold;">${feat.label}</span>
                             <span>${property[feat.key]}</span>
                         </div>
@@ -76,25 +71,33 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
             });
 
             content += `
+                        </div>
+                    </div>
+                    <div style="flex: 1;">
+                        ${mainPhoto ? `
+                            <div style="width: 100%; height: 320px; overflow: hidden; border: 1px solid #eee;">
+                                <img src="${mainPhoto}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" />
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
 
-                <div style="margin-bottom: 40px;">
-                    <h3 style="font-size: 12pt; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 8px; margin-bottom: 20px;">Descripción</h3>
-                    <p style="text-align: justify; color: #222; margin: 0;">${property.description}</p>
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 15px;">Descripción</h3>
+                    <p style="text-align: justify; color: #222; margin: 0; font-size: 10pt;">${property.description}</p>
                 </div>
             `;
 
             if (secondaryPhotos.length > 0) {
                 content += `
-                    <div style="margin-top: 40px;">
-                        <h3 style="font-size: 12pt; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 8px; margin-bottom: 25px;">Fotografías Adicionales</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="margin-top: 20px;">
+                        <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1px solid #000; padding-bottom: 5px; margin-bottom: 20px;">Fotos Adicionales</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                 `;
                 
                 secondaryPhotos.forEach(imgUrl => {
                     content += `
-                        <div style="height: 240px; overflow: hidden; border: 1px solid #eee;">
+                        <div style="height: 200px; overflow: hidden; border: 1px solid #eee;">
                             <img src="${imgUrl}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" />
                         </div>
                     `;
@@ -106,10 +109,10 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                 `;
             }
 
-            // Footer
+            // Simplified Footer
             content += `
-                <div style="margin-top: 50px; text-align: center; border-top: 1px solid #000; padding-top: 20px; color: #999; font-size: 8pt;">
-                    Ficha generada el ${new Date().toLocaleDateString('es-MX')} • Viva Home Inmuebles • www.vivahomeinmuebles.com
+                <div style="margin-top: 40px; text-align: center; border-top: 1px solid #000; padding-top: 15px; color: #666; font-size: 9pt;">
+                    Ficha generada el ${new Date().toLocaleDateString('es-MX')}
                 </div>
             `;
 
@@ -120,14 +123,13 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
 
             const canvas = await html2canvas(element, {
                 useCORS: true,
-                scale: 3, // High quality
+                scale: 3,
                 logging: false,
                 backgroundColor: '#ffffff'
             });
 
             const imgData = canvas.toDataURL('image/jpeg', 0.95);
             const pdf = new jsPDF('p', 'mm', 'a4');
-            
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
             const contentHeight = (canvas.height * pdfWidth) / canvas.width;
@@ -135,11 +137,9 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
             let heightLeft = contentHeight;
             let position = 0;
 
-            // Add first page
             pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, contentHeight);
             heightLeft -= pdfHeight;
 
-            // Add additional pages if content overflows
             while (heightLeft > 0) {
                 position = heightLeft - contentHeight;
                 pdf.addPage();
@@ -151,7 +151,7 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
             document.body.removeChild(element);
         } catch (err) {
             console.error('PDF generation error:', err);
-            alert('Error al generar el PDF. Verifica que todas las fotos se hayan cargado.');
+            alert('Error al generar el PDF.');
         } finally {
             setIsGeneratingPDF(false);
         }
