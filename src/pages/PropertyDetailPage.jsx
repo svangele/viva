@@ -103,7 +103,7 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
             const images = [...(property.images || [])];
             if (images.length === 0 && property.image) images.push(property.image);
             const mainPhoto = images[0];
-            const secondaryPhotos = images.slice(1, 6);
+            const secondaryPhotos = images.slice(1, 11);
 
             const infoHtml = `
                 <div style="padding-top: 10px;">
