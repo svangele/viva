@@ -135,12 +135,16 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
 
             // Part 2: Secondary Photos (on a new page)
             if (secondaryPhotos.length > 0) {
+                const isMany = secondaryPhotos.length > 6;
+                const gridCols = isMany ? '1fr 1fr 1fr' : '1fr 1fr';
+                const photoHeight = isMany ? '170px' : '250px';
+                
                 const photosHtml = `
                     <div style="padding-top: 10px;">
                         <h3 style="font-size: 11pt; text-transform: uppercase; border-bottom: 1.5px solid #000; padding-bottom: 5px; margin-bottom: 25px;">Fotografías Adicionales</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div style="display: grid; grid-template-columns: ${gridCols}; gap: 15px;">
                             ${secondaryPhotos.map(img => `
-                                <div style="height: 250px; overflow: hidden; border: 1px solid #eee;">
+                                <div style="height: ${photoHeight}; overflow: hidden; border: 1px solid #eee;">
                                     <img src="${img}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: cover;" />
                                 </div>
                             `).join('')}
