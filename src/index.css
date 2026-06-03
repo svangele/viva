@@ -411,9 +411,9 @@ body {
     left: 15px;
     background: var(--dark-slate);
     color: var(--white);
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -422,19 +422,19 @@ body {
 }
 
 .status-badge.vendido {
-    background: #dc3545; /* Red */
+    background: linear-gradient(135deg, #e52d27, #b31217);
 }
 
 .status-badge.rentado {
-    background: #0d6efd; /* Blue */
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
 }
 
 .status-badge.oferta-especial {
-    background: var(--gold); /* Gold */
+    background: linear-gradient(135deg, #ff512f, #dd2476);
 }
 
 .status-badge.precio-mejorado {
-    background: var(--forest-green); /* Forest Green */
+    background: linear-gradient(135deg, #11998e, #38ef7d);
 }
 
 /* Code Badge (between title and price) */
