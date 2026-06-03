@@ -165,7 +165,7 @@ function App() {
                                 <p>Expertos en el mercado inmobiliario, brindando confianza y profesionalismo en cada paso.</p>
                                 <div className="footer-social">
                                     <a href="https://www.instagram.com/vivahomeqro/" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
-                                    <a href="https://www.facebook.com/viva.home.681197" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook"></i></a>
+                                    <a href="https://www.facebook.com/profile.php?id=100095306845710" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook"></i></a>
                                 </div>
                             </div>
                             <div className="footer-contact">

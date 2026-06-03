@@ -36,7 +36,7 @@ function Navbar({ setShowAdminLogin }) {
                         <a href="https://www.instagram.com/vivahomeqro/" target="_blank" rel="noopener noreferrer">
                             <i className="fab fa-instagram"></i>
                         </a>
-                        <a href="https://www.facebook.com/viva.home.681197" target="_blank" rel="noopener noreferrer">
+                        <a href="https://www.facebook.com/profile.php?id=100095306845710" target="_blank" rel="noopener noreferrer">
                             <i className="fab fa-facebook"></i>
                         </a>
                     </div>
