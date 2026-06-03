@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS properties (
   price REAL,
   type TEXT,
   status TEXT DEFAULT 'Disponible',
+  offer_badge TEXT,
   location TEXT,
   m2_lote REAL,
   m2_construccion REAL,

@@ -297,6 +297,16 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                                         <option value="Vendido">Vendido</option>
                                         <option value="Rentado">Rentado</option>
                                     </select>
+                                    <select
+                                        className="edit-input"
+                                        value={editForm.offer_badge || ''}
+                                        onChange={e => setEditForm({...editForm, offer_badge: e.target.value})}
+                                        style={{ marginTop: '10px' }}
+                                    >
+                                        <option value="">Sin Etiqueta Especial (Ninguna)</option>
+                                        <option value="Oferta Especial">Oferta Especial</option>
+                                        <option value="Precio Mejorado">Precio Mejorado</option>
+                                    </select>
                                 </div>
                             )}
                             <p style={{ color: '#666', marginTop: '10px' }}>

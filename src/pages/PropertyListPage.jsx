@@ -18,6 +18,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
         price: '',
         type: 'Venta',
         status: 'Disponible',
+        offer_badge: '',
         location: '',
         m2_lote: '',
         m2_construccion: '',
@@ -140,7 +141,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
             if (res.ok) {
                 alert('Propiedad guardada con éxito');
                 setNewProperty({
-                    title: '', price: '', type: 'Venta', status: 'Disponible', location: '', m2_lote: '', m2_construccion: '',
+                    title: '', price: '', type: 'Venta', status: 'Disponible', offer_badge: '', location: '', m2_lote: '', m2_construccion: '',
                     bathrooms: '', parking: '', bedrooms: '', floors: '', level: '', description: '',
                     water_storage: '', gas_storage: '', is_private: '', maintenance_fee: '',
                     service_gas: '', service_light: '', service_water: '', service_internet: '',
@@ -276,6 +277,13 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                                 </Link>
                                 <div className="property-info">
                                     <h3>{prop.title || "Propiedad en Querétaro"}</h3>
+                                    {prop.offer_badge && (
+                                        <div className="offer-badge-wrapper">
+                                            <span className={`offer-badge ${prop.offer_badge === 'Oferta Especial' ? 'special-offer' : 'improved-price'}`}>
+                                                {prop.offer_badge}
+                                            </span>
+                                        </div>
+                                    )}
                                     <p className="price">{prop.price ? `$${prop.price.toLocaleString()}` : "Contactar para precio"}</p>
                                     <p className="location"><i className="fas fa-map-marker-alt"></i> {prop.location || "Querétaro, Qro."}</p>
                                     <div className="features">
@@ -318,6 +326,14 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                                         <option value="Disponible">Disponible</option>
                                         <option value="Vendido">Vendido</option>
                                         <option value="Rentado">Rentado</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Etiqueta Especial</label>
+                                    <select name="offer_badge" value={newProperty.offer_badge || ''} onChange={handleInputChange}>
+                                        <option value="">Ninguna</option>
+                                        <option value="Oferta Especial">Oferta Especial</option>
+                                        <option value="Precio Mejorado">Precio Mejorado</option>
                                     </select>
                                 </div>
                                 <div className="form-group">

@@ -429,6 +429,35 @@ body {
     background: #0d6efd; /* Blue */
 }
 
+/* Offer Badge (Special Offer / Improved Price) */
+.offer-badge-wrapper {
+    margin: 8px 0;
+}
+
+.offer-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid transparent;
+}
+
+.offer-badge.special-offer {
+    color: #d32f2f;
+    background-color: #ffebee;
+    border-color: #ffcdd2;
+}
+
+.offer-badge.improved-price {
+    color: #2e7d32;
+    background-color: #e8f5e9;
+    border-color: #c8e6c9;
+}
+
+
 .card-content {
     padding: 25px;
 }
