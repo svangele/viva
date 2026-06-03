@@ -57,7 +57,7 @@ function Home({ currentSlide, setCurrentSlide, properties, isAdmin, handleDelete
                                 <div className="property-image">
                                     <img src={prop.image} alt="Propiedad" />
                                     {prop.status && prop.status !== 'Disponible' && (
-                                        <span className={`status-badge ${prop.status.toLowerCase()}`}>
+                                        <span className={`status-badge ${prop.status.toLowerCase().replace(/\s+/g, '-')}`}>
                                             {prop.status}
                                         </span>
                                     )}

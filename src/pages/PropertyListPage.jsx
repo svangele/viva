@@ -18,7 +18,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
         price: '',
         type: 'Venta',
         status: 'Disponible',
-        offer_badge: '',
+        code: '',
         location: '',
         m2_lote: '',
         m2_construccion: '',
@@ -141,7 +141,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
             if (res.ok) {
                 alert('Propiedad guardada con éxito');
                 setNewProperty({
-                    title: '', price: '', type: 'Venta', status: 'Disponible', offer_badge: '', location: '', m2_lote: '', m2_construccion: '',
+                    title: '', price: '', type: 'Venta', status: 'Disponible', code: '', location: '', m2_lote: '', m2_construccion: '',
                     bathrooms: '', parking: '', bedrooms: '', floors: '', level: '', description: '',
                     water_storage: '', gas_storage: '', is_private: '', maintenance_fee: '',
                     service_gas: '', service_light: '', service_water: '', service_internet: '',
@@ -265,7 +265,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                                 <Link to={`/propiedad/${prop.id}`} className="property-image-container" style={{ display: 'block' }}>
                                     <img src={prop.images?.[0] || prop.image} alt={prop.title || "Propiedad"} />
                                     {prop.status && prop.status !== 'Disponible' && (
-                                        <span className={`status-badge ${prop.status.toLowerCase()}`}>
+                                        <span className={`status-badge ${prop.status.toLowerCase().replace(/\s+/g, '-')}`}>
                                             {prop.status}
                                         </span>
                                     )}
@@ -277,10 +277,10 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                                 </Link>
                                 <div className="property-info">
                                     <h3>{prop.title || "Propiedad en Querétaro"}</h3>
-                                    {prop.offer_badge && (
+                                    {prop.code && (
                                         <div className="offer-badge-wrapper">
-                                            <span className={`offer-badge ${prop.offer_badge === 'Oferta Especial' ? 'special-offer' : 'improved-price'}`}>
-                                                {prop.offer_badge}
+                                            <span className="offer-badge code-badge">
+                                                Código: {prop.code}
                                             </span>
                                         </div>
                                     )}
@@ -326,15 +326,13 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                                         <option value="Disponible">Disponible</option>
                                         <option value="Vendido">Vendido</option>
                                         <option value="Rentado">Rentado</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>Etiqueta Especial</label>
-                                    <select name="offer_badge" value={newProperty.offer_badge || ''} onChange={handleInputChange}>
-                                        <option value="">Ninguna</option>
                                         <option value="Oferta Especial">Oferta Especial</option>
                                         <option value="Precio Mejorado">Precio Mejorado</option>
                                     </select>
+                                </div>
+                                <div className="form-group">
+                                    <label>Código</label>
+                                    <input type="text" name="code" value={newProperty.code || ''} onChange={handleInputChange} placeholder="Ej. C-102" />
                                 </div>
                                 <div className="form-group">
                                     <label>Ubicación</label>

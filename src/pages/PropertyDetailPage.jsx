@@ -296,17 +296,16 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                                         <option value="Disponible">Disponible</option>
                                         <option value="Vendido">Vendido</option>
                                         <option value="Rentado">Rentado</option>
-                                    </select>
-                                    <select
-                                        className="edit-input"
-                                        value={editForm.offer_badge || ''}
-                                        onChange={e => setEditForm({...editForm, offer_badge: e.target.value})}
-                                        style={{ marginTop: '10px' }}
-                                    >
-                                        <option value="">Sin Etiqueta Especial (Ninguna)</option>
                                         <option value="Oferta Especial">Oferta Especial</option>
                                         <option value="Precio Mejorado">Precio Mejorado</option>
                                     </select>
+                                    <input
+                                        className="edit-input"
+                                        value={editForm.code || ''}
+                                        onChange={e => setEditForm({...editForm, code: e.target.value})}
+                                        placeholder="Código de la propiedad"
+                                        style={{ marginTop: '10px' }}
+                                    />
                                 </div>
                             )}
                             <p style={{ color: '#666', marginTop: '10px' }}>
@@ -374,7 +373,7 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                 ) : (
                     <div className="detail-gallery" style={{ position: 'relative' }}>
                         {property.status && property.status !== 'Disponible' && (
-                            <span className={`status-badge ${property.status.toLowerCase()}`}>
+                            <span className={`status-badge ${property.status.toLowerCase().replace(/\s+/g, '-')}`}>
                                 {property.status}
                             </span>
                         )}
