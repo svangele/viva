@@ -178,6 +178,7 @@ function App() {
                                 <ul>
                                     <li><a href="/propiedades?type=Venta">Venta</a></li>
                                     <li><a href="/propiedades?type=Renta">Renta</a></li>
+                                    <li><a href="/propiedades?type=Terrenos">Terrenos</a></li>
                                     <li><a href="#" onClick={(e) => { e.preventDefault(); setShowPrivacy(true); }}>Aviso de Privacidad</a></li>
                                 </ul>
                             </div>

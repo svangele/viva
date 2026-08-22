@@ -237,6 +237,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                             <option value="">Todos</option>
                             <option value="Venta">Venta</option>
                             <option value="Renta">Renta</option>
+                            <option value="Terrenos">Terrenos</option>
                         </select>
                     </div>
                     <div className="filter-group">
@@ -318,6 +319,7 @@ function PropertyListPage({ properties, isAdmin, handleDelete, fetchProperties }
                                     <select name="type" value={newProperty.type} onChange={handleInputChange}>
                                         <option value="Venta">Venta</option>
                                         <option value="Renta">Renta</option>
+                                        <option value="Terrenos">Terrenos</option>
                                     </select>
                                 </div>
                                 <div className="form-group">

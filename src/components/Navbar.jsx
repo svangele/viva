@@ -30,6 +30,7 @@ function Navbar({ setShowAdminLogin }) {
                 <ul className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
                     <li><Link to="/propiedades?type=Venta" onClick={() => setIsMobileMenuOpen(false)}>Venta</Link></li>
                     <li><Link to="/propiedades?type=Renta" onClick={() => setIsMobileMenuOpen(false)}>Renta</Link></li>
+                    <li><Link to="/propiedades?type=Terrenos" onClick={() => setIsMobileMenuOpen(false)}>Terrenos</Link></li>
                     <li><a href={isHome ? "#nosotros" : "/#nosotros"} onClick={() => setIsMobileMenuOpen(false)}>Nosotros</a></li>
                     <li><a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="contact-btn" onClick={() => setIsMobileMenuOpen(false)}>Contacto</a></li>
                     <div className="social-nav">
