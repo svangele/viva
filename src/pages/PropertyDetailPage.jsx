@@ -289,6 +289,16 @@ function PropertyDetailPage({ properties, isAdmin, fetchProperties }) {
                                     />
                                     <select
                                         className="edit-input"
+                                        value={editForm.type || 'Venta'}
+                                        onChange={e => setEditForm({...editForm, type: e.target.value})}
+                                        style={{ marginTop: '10px' }}
+                                    >
+                                        <option value="Venta">Venta</option>
+                                        <option value="Renta">Renta</option>
+                                        <option value="Terrenos">Terrenos</option>
+                                    </select>
+                                    <select
+                                        className="edit-input"
                                         value={editForm.status || 'Disponible'}
                                         onChange={e => setEditForm({...editForm, status: e.target.value})}
                                         style={{ marginTop: '10px' }}
